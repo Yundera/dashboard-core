@@ -9,11 +9,9 @@
     "./*": "./src/*.ts"
   },
   "scripts": {
-    "build": "tsup",
-    "dev": "concurrently \"npm run dev:tsup\" \"npm run dev:barrels\"",
+    "build": "npm run barrels",
     "start": "npm run dev",
-    "dev:tsup": "tsup --watch",
-    "dev:barrels": "barrelsby --directory ./src --exclude \"node_modules\" --exclude \"src/backend\" --exclude \"test.ts\"  --delete --name \"index.ts\" --watch",
+    "dev": "barrelsby --directory ./src --exclude \"node_modules\" --exclude \"src/backend\" --exclude \"test.ts\"  --delete --name \"index.ts\" --watch",
     "barrels": "barrelsby --directory ./src --exclude \"node_modules\" --exclude \"src/backend\" --exclude \"test.ts\"  --delete --name \"index.ts\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
