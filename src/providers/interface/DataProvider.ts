@@ -39,7 +39,7 @@ export const multiDataProvider = new Proxy<DataProvider>(defaultDataProvider, {
                 console.log(`${action} ${resource} : ${JSON.stringify(params)}`);
                 notifyRessource(resource);
                 if (resourceResolver[resource]) {
-                    return resourceResolver[resource][action];
+                    return resourceResolver[resource][action](resource, params);
                 } else {
                     //look at the configuration to add a provider for your resource
                     throw new Error('invalid data provider :' + resource);

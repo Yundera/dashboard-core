@@ -2,8 +2,13 @@ import {Onboarding} from "../component/onboarding/Onboarding";
 import {SignUpStep} from "../component/onboarding/SignUpStep";
 import {Container, Stack, Typography} from "@mui/material";
 import {useConfigurationContext} from "../configuration/ConfigurationContext";
+import {ReactNode} from "react";
 
-export const RegisterPage = ({ children }) => {  // Add children prop here
+interface RegisterPageProps {
+  children: ReactNode[];
+}
+
+export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  // Add children prop here
   const {logo, title} = useConfigurationContext();
 
   return (
@@ -23,11 +28,11 @@ export const RegisterPage = ({ children }) => {  // Add children prop here
       <Container sx={{p: 4, borderRadius: 2, boxShadow: 3, backgroundColor: 'white'}}>
         <Onboarding>
           <SignUpStep stepName={'Sign Up'}/>
-          {children} {/* Render the children here */}
+          {...children}
         </Onboarding>
       </Container>
     </Stack>
   );
 };
 
-RegisterPage.path = '/register';
+export const RegisterPagePath = '/register';
