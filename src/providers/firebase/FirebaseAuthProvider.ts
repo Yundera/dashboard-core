@@ -55,7 +55,7 @@ export const getAuthProvider: () => Promise<AuthProviderInterface> = async () =>
     const authProviderAdditional:AuthProviderAdditionalInterface = {
 
       registerUser: async (email: string, password: string) => {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/api/core/user/create`, {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/core/user/create`, {
           email,
           password
         });
@@ -65,7 +65,7 @@ export const getAuthProvider: () => Promise<AuthProviderInterface> = async () =>
       },
 
       sendResetPasswordMail: async (email: string) => {
-        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH}/api/core/user/reset`, {
+        const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/core/user/reset`, {
           email,
         });
         if (response.status != 200){

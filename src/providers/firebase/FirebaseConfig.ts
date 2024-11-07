@@ -11,7 +11,7 @@ let firebaseConfig:{
 
 export async function fetchFirebaseConfig() {
     if(!firebaseConfig) {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH}/api/core/config/firebase`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/core/config/firebase`);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
