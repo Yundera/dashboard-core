@@ -4,7 +4,7 @@ import {useLocation, useNavigate} from 'react-router-dom';
 import {Avatar, Box, Button, Card, CardActions, CircularProgress,} from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import {Form, required, TextInput, useLogin, useNotify, useTranslate,} from 'react-admin';
-import {RegisterPage} from "./RegisterPage";
+import {RegisterPage, RegisterPagePath} from "./RegisterPage";
 import {PasswordResetPage} from "./PasswordResetPage";
 
 const Login = () => {
@@ -122,7 +122,7 @@ const Login = () => {
                     color="primary"
                     disabled={loading}
                     fullWidth
-                    onClick={() => navigate(RegisterPage.path)}
+                    onClick={() => navigate(RegisterPagePath)}
                   >
                     {loading && (
                       <CircularProgress size={25} thickness={2}/>
