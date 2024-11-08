@@ -24,7 +24,7 @@ const MenuItem = (panel: PanelInterface, dense: boolean,translate:any) => {
     />
 }
 
-const Menu = (panels) => ({ dense = false }: MenuProps) => {
+export const Menu = (panels: PanelInterface[]) => ({ dense = false }: MenuProps) => {
 
     const { isLoading } = usePermissions();
 
@@ -51,6 +51,4 @@ const Menu = (panels) => ({ dense = false }: MenuProps) => {
         </Box>
     );
 };
-
-export default Menu;
 

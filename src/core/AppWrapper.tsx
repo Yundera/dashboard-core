@@ -1,6 +1,6 @@
 import {ReactNode, useState} from 'react';
 import {Admin, DataProvider, localStorageStore, Resource, StoreContextProvider, useStore} from 'react-admin';
-import {type ThemeName, themes} from './themes/themes';
+import {Theme} from './themes/themes';
 import Layout from './layout/Layout';
 import Login from './pages/Login';
 import {i18nProvider} from "./component/I18nProvider";
@@ -15,6 +15,7 @@ interface AppProps {
   dashboard: React.ComponentType<any>;
   authProvider:AuthProviderInterface;
   dataProvider:DataProvider;
+  themeList: Theme[];
   panels: PanelInterface[];
 }
 
@@ -28,11 +29,12 @@ const App = ({
                dashboard,
                authProvider,
                dataProvider,
+               themeList,
                panels
              }: AppProps) => {
-  const [themeName] = useStore<ThemeName>('themeName', 'house');
-  const lightTheme = themes.find(theme => theme.name === themeName)?.light;
-  const darkTheme = themes.find(theme => theme.name === themeName)?.dark;
+  const [themeName] = useStore<string>('themeName', 'default');
+  const lightTheme = themeList.find(theme => theme.name === themeName)?.light;
+  const darkTheme = themeList.find(theme => theme.name === themeName)?.dark;
   const [resources, setResources] = useState<Record<string, string>>({});
   const initialResources = panels.map(value => {
     if(value.resource) {
@@ -84,6 +86,7 @@ export const AppWrapper = ({
                       dashboard,
                       authProvider,
                       dataProvider,
+                      themeList,
                       panels,
                     }: AppWrapperProps) => (
   <StoreContextProvider value={store}>
@@ -92,6 +95,7 @@ export const AppWrapper = ({
       dataProvider={dataProvider}
       dashboard={dashboard}
       panels={panels}
+      themeList={themeList}
     >
       {children}
     </App>

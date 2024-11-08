@@ -2,7 +2,7 @@
 import {Button, Stack, Typography} from '@mui/material';
 import type {ReactNode} from 'react';
 
-interface OnboardingStepProps {
+export interface OnboardingStepProps {
   onNext?: (dir?:boolean) => void;
   stepName: string;
   backButton?: boolean;

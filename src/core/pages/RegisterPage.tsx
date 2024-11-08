@@ -2,10 +2,11 @@ import {Onboarding} from "../component/onboarding/Onboarding";
 import {SignUpStep} from "../component/onboarding/SignUpStep";
 import {Container, Stack, Typography} from "@mui/material";
 import {useConfigurationContext} from "../configuration/ConfigurationContext";
-import {ReactNode} from "react";
+import {Children, ReactElement} from "react";
+import {OnboardingStepProps} from "../component/onboarding/OnboardingStep";
 
 interface RegisterPageProps {
-  children: ReactNode[];
+  children: ReactElement<OnboardingStepProps> | ReactElement<OnboardingStepProps>[];
 }
 
 export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  // Add children prop here
@@ -28,7 +29,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  //
       <Container sx={{p: 4, borderRadius: 2, boxShadow: 3, backgroundColor: 'white'}}>
         <Onboarding>
           <SignUpStep stepName={'Sign Up'}/>
-          {...children}
+          {...Children.toArray(children)}
         </Onboarding>
       </Container>
     </Stack>

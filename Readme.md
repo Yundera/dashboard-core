@@ -30,3 +30,31 @@ export default async function handler(
 }
     
 ```
+
+# 3
+Setup firebase
+1 - Authentication email/password
+2 - Firestore database
+3 - Get a storage account.json and integration.json
+```bash
+// https://firebase.google.com/docs/rules/rules-language
+// when you change this rule file, you need to deploy it to firebase and save it in the backend repo
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // General user document rules
+    match /users/{userId} {
+      // Allow read and write access to the owner of the document
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // General user document rules
+    match /permissions/{userId} {
+      // readonly
+      allow read;
+    }
+
+  }
+}
+```

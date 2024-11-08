@@ -17,29 +17,29 @@ import {deleteDoc, doc, getDoc, getFirestore} from 'firebase/firestore';
 import type {UserIdentity} from "ra-core/src/types.ts";
 import {initFirebase} from "./FirebaseProvider";
 
-let authProvider:AuthProviderInterface;
+let authProvider: AuthProviderInterface;
 
 export const getAuthProvider: () => Promise<AuthProviderInterface> = async () => {
   if (typeof window === 'undefined') {
     // Return a dummy provider for SSR
     return {} as AuthProviderInterface;
   }
-  if(!authProvider) {
+  if (!authProvider) {
     const app = await initFirebase();
-    const { FirebaseAuthProvider } = await import('react-admin-firebase');
+    const {FirebaseAuthProvider} = await import('react-admin-firebase');
     const fbauthProvider = FirebaseAuthProvider(app.options, options);
-    const authProviderCopy = { ...fbauthProvider };
+    const authProviderCopy = {...fbauthProvider};
 
-    authProviderCopy.getIdentity = async ():Promise<UserIdentity>=> {
+    authProviderCopy.getIdentity = async (): Promise<UserIdentity> => {
       const auth = getAuth();
       const user = auth.currentUser;
-      if(!user){
+      if (!user) {
         throw new Error("No user is currently signed in.");
       }
       const db = getFirestore(app);
       const docRef = doc(db, 'users', user.uid);
       const docSnap = await getDoc(docRef);
-      const idToken = await user.getIdToken( true);
+      const idToken = await user.getIdToken(true);
 
       return {
         id: user.uid,
@@ -48,18 +48,18 @@ export const getAuthProvider: () => Promise<AuthProviderInterface> = async () =>
         fullName: docSnap.get("first_name"),
         avatar: docSnap.get("avatar"),
         permissions: docSnap.get("permissions"),
-        authToken:idToken,
+        authToken: idToken,
       };
     };
 
-    const authProviderAdditional:AuthProviderAdditionalInterface = {
+    const authProviderAdditional: AuthProviderAdditionalInterface = {
 
       registerUser: async (email: string, password: string) => {
         const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/core/user/create`, {
           email,
           password
         });
-        if (response.status != 200){
+        if (response.status != 200) {
           throw new Error(response.data.error);
         }
       },
@@ -68,7 +68,7 @@ export const getAuthProvider: () => Promise<AuthProviderInterface> = async () =>
         const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/core/user/reset`, {
           email,
         });
-        if (response.status != 200){
+        if (response.status != 200) {
           throw new Error(response.data.error);
         }
       },
@@ -144,7 +144,7 @@ export const getAuthProvider: () => Promise<AuthProviderInterface> = async () =>
       },
     };
 
-    authProvider = {...authProviderCopy,...authProviderAdditional} as any;
+    authProvider = {...authProviderCopy, ...authProviderAdditional} as any;
   }
 
   return authProvider;
