@@ -1,8 +1,8 @@
 // /!\ should be called in this file in nextJS pages/api/core/[[...path]].ts
-import { NextApiRequest, NextApiResponse } from 'next';
-import { localBackendConfig } from "./LocalBackendConfig";
-import { config, admin } from './FirebaseAdminApi';
-import { sendEmail } from "./Sendgrid";
+import {NextApiRequest, NextApiResponse} from 'next';
+import {localBackendConfig} from "./LocalBackendConfig";
+import {admin, config} from './FirebaseAdminApi';
+import {sendEmail} from "./Sendgrid";
 
 export async function coreApiHandler(
   req: NextApiRequest,

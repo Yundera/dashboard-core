@@ -1,15 +1,15 @@
 import {
-    Avatar,
-    type AvatarProps,
-    Box,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    Link,
-    Stack,
-    Typography,
+  Avatar,
+  type AvatarProps,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Link,
+  Stack,
+  Typography,
 } from '@mui/material';
 import {useFieldValue} from 'ra-core';
 import {createRef, useCallback, useState} from 'react';

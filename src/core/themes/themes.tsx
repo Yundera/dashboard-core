@@ -1,6 +1,4 @@
-import {
-    type RaThemeOptions,
-} from 'react-admin';
+import {type RaThemeOptions,} from 'react-admin';
 
 export interface Theme {
     name: string;

@@ -1,10 +1,10 @@
 import * as React from 'react';
-import { useTheme } from '@mui/material/styles';
+import {useTheme} from '@mui/material/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import clsx from 'clsx';
-import { useLoading } from 'ra-core';
+import {useLoading} from 'ra-core';
 
-import { SxProps } from '@mui/system';
+import {SxProps} from '@mui/system';
 
 export const LoadingIndicator = (props: LoadingIndicatorProps) => {
     const { className, sx, ...rest } = props;
