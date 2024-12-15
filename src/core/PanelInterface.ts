@@ -6,6 +6,7 @@ export interface PanelInterface{
     name: string;
     resource:ResourceProps;
     i18n?:Record<string,TranslationMessages>,
+    permissions?:string;
     route?:{
         routes:any,
     };

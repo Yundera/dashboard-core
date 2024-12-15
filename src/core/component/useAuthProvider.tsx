@@ -1,5 +1,5 @@
 import {useAuthProvider as rauseAuthProvider} from "react-admin";
-import type {AuthProviderInterface} from "../../providers/interface/AuthProviderInterface";
+import type {AuthProviderInterface} from "../../interface/AuthProviderInterface";
 import {useEffect, useState} from "react";
 
 export const useAuthProvider = () => {

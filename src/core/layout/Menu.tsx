@@ -4,7 +4,6 @@ import {
   DashboardMenuItem,
   MenuItemLink,
   type MenuProps,
-  usePermissions,
   useSidebarState,
   useTranslate,
 } from 'react-admin';
@@ -25,9 +24,6 @@ const MenuItem = (panel: PanelInterface, dense: boolean,translate:any) => {
 }
 
 export const Menu = (panels: PanelInterface[]) => ({ dense = false }: MenuProps) => {
-
-    const { isLoading } = usePermissions();
-
     const translate = useTranslate();
     const [open] = useSidebarState();
 
@@ -45,7 +41,7 @@ export const Menu = (panels: PanelInterface[]) => ({ dense = false }: MenuProps)
             }}
         >
             <DashboardMenuItem />
-            {!isLoading && panels.map(value => {
+            {panels.map(value => {
                 return MenuItem(value, dense,translate);
             })}
         </Box>

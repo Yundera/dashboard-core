@@ -1,7 +1,8 @@
 import {useEffect, useState} from "react";
-import {useGetIdentity} from "react-admin";
 import {getFirebaseDataProvider} from "../../../providers/firebase/FireBaseDataProvider";
 import {USERS_RESOURCE} from "../../UsersResource";
+import {useGetIdentity} from "../useGetIdentity";
+import {ExtendedUserIdentity} from "../../../interface/ExtendedUserIdentity";
 
 export interface UserIdentity {
     id: string;
@@ -11,11 +12,11 @@ export interface UserIdentity {
     photoURL: string;
 }
 
-let dataCache: UserIdentity | null = null;
+let dataCache: ExtendedUserIdentity | null = null;
 
 export function useUserIdentity() {
     const { data: dataId, isLoading: isLoadingIdentity, error: identityError } = useGetIdentity();
-    const [data, setData] = useState<UserIdentity | null>(dataCache);
+    const [data, setData] = useState<ExtendedUserIdentity | null>(dataCache);
     const [isLoading, setIsLoading] = useState(!dataCache);
     const [error, setError] = useState<any>(null);
 

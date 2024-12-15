@@ -11,11 +11,15 @@ import {
 
 
 // Initialize Firebase
-import type {AuthProviderAdditionalInterface, AuthProviderInterface} from '../interface/AuthProviderInterface';
+import {
+  AuthProviderAdditionalInterface,
+  AuthProviderInterface
+} from '../../interface/AuthProviderInterface';
 import axios from "axios";
 import {deleteDoc, doc, getDoc, getFirestore} from 'firebase/firestore';
 import type {UserIdentity} from "ra-core/src/types.ts";
 import {initFirebase} from "./FirebaseProvider";
+import {ExtendedUserIdentity} from "../../interface/ExtendedUserIdentity";
 
 let authProvider: AuthProviderInterface;
 
@@ -30,7 +34,7 @@ export const getAuthProvider: () => Promise<AuthProviderInterface> = async () =>
     const fbauthProvider = FirebaseAuthProvider(app.options, options);
     const authProviderCopy = {...fbauthProvider};
 
-    authProviderCopy.getIdentity = async (): Promise<UserIdentity> => {
+    authProviderCopy.getIdentity = async (): Promise<ExtendedUserIdentity> => {
       const auth = getAuth();
       const user = auth.currentUser;
       if (!user) {
@@ -43,11 +47,10 @@ export const getAuthProvider: () => Promise<AuthProviderInterface> = async () =>
 
       return {
         id: user.uid,
-        email: user.email,
+        email: user.email || "",
         emailVerified: user.emailVerified,
         fullName: docSnap.get("first_name"),
         avatar: docSnap.get("avatar"),
-        permissions: docSnap.get("permissions"),
         authToken: idToken,
       };
     };
@@ -61,6 +64,39 @@ export const getAuthProvider: () => Promise<AuthProviderInterface> = async () =>
         });
         if (response.status != 200) {
           throw new Error(response.data.error);
+        }
+      },
+
+      listPermissions: async (): Promise<Record<string, boolean>> => {
+        const auth = getAuth();
+        await auth.authStateReady();
+        const user = auth.currentUser;
+        if (!user) {
+          console.warn("No user is currently signed in.");
+          return {};
+        }
+        try {
+          const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/api/core/user/permission`,
+            {
+              uid: user.uid,
+            });
+          if (response.status != 200) {
+            throw new Error(response.data.error);
+          }
+          return response.data;
+        } catch (e) {
+          console.error(e);
+          return {};
+        }
+      },
+
+      hasPermission : async (permission: string): Promise<boolean> => {
+        try {
+          const permissions = await authProviderAdditional.listPermissions() as Record<string, any>;
+          return !!permissions[permission];
+        } catch (e) {
+          console.error(e);
+          return false;
         }
       },
 

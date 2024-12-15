@@ -1,4 +1,5 @@
 import type {AuthProvider} from "ra-core";
+import {ExtendedUserIdentity} from "./ExtendedUserIdentity";
 
 export interface AuthProviderAdditionalInterface{
   registerUser(email: string, password: string): Promise<any>;
@@ -14,11 +15,13 @@ export interface AuthProviderAdditionalInterface{
   authStateReady(): Promise<void>;
 
   deleteAccount(currentPassword: string): Promise<void>;
+
+  hasPermission(permission:string): Promise<boolean>;
+
+  listPermissions(): Promise<Record<string,boolean>>;
 }
 
-
 export interface AuthProviderInterface extends AuthProviderAdditionalInterface,AuthProvider{
-  getPermissions(): Promise<string[]>;
   login(params: { username: string; password: string }): Promise<any>;
-  getIdentity(): Promise<any>;
+  getIdentity(): Promise<ExtendedUserIdentity>;
 }

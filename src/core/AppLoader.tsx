@@ -1,13 +1,14 @@
 import {ComponentType, Suspense, useEffect, useState} from 'react';
 import {Box, CircularProgress} from "@mui/material";
 import {loadBackendConfiguration} from "./configuration/BackendConfigurationLoader";
-import type {AuthProviderInterface} from "../providers/interface/AuthProviderInterface";
+import type {AuthProviderInterface} from "../interface/AuthProviderInterface";
 import {DataProvider} from "react-admin";
 
 interface AppLoaderProps {
   AppComponent: ComponentType<{
     authProvider:AuthProviderInterface;
     dataProvider:DataProvider;
+    permissions:Record<string,boolean>;
   }>;  // Type for the App component prop
   providers: () => Promise<{
     authProvider:AuthProviderInterface;
@@ -26,12 +27,15 @@ export function AppLoader({
     authProvider:AuthProviderInterface;
     dataProvider:DataProvider;
   }>();
+  const [permissions, setPermissions] = useState<Record<string,boolean>>({});
 
   useEffect(() => {
     const loadFirebaseConfig = async () => {
       try {
         await loadBackendConfiguration();
-        setProvids(await providers());
+        let p = await providers();
+        setProvids(p);
+        setPermissions(await p.authProvider.listPermissions());
         setIsFirebaseConfigLoaded(true);
       } catch (error) {
         console.error('Error loading Firebase config:', error);
@@ -63,7 +67,7 @@ export function AppLoader({
 
   return (
     <Suspense fallback={<LoaderComponent />}>
-      <AppComponent authProvider={provids.authProvider}  dataProvider={provids.dataProvider}/>
+      <AppComponent authProvider={provids.authProvider}  dataProvider={provids.dataProvider} permissions={permissions}/>
     </Suspense>
   );
 }

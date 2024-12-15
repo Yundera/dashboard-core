@@ -11,9 +11,10 @@ import {
   TextField,
 } from '@mui/material';
 import {useForm} from 'react-hook-form';
-import {useGetIdentity, useLogout, useNotify} from 'react-admin';
+import {useLogout, useNotify} from 'react-admin';
 import {DialogCloseButton} from './DialogCloseButton';
 import {useAuthProvider} from "../useAuthProvider";
+import {useGetIdentity} from "../useGetIdentity";
 
 interface DeleteAccountProps {
   open: boolean;
@@ -26,13 +27,13 @@ export const DeleteAccount = ({ open, setOpen, onDeleteUser }: DeleteAccountProp
     mode: 'onChange',
   });
   const authProvider = useAuthProvider();
-  const identity = useGetIdentity();
+  const {identity} = useGetIdentity();
   const notify = useNotify();
   const logout = useLogout();
 
   const onSubmit = async (data: any) => {
     try {
-      const uid = ""+identity.identity?.id;
+      const uid = identity.id;
       console.log(`Deleting account ${uid}`);
       await onDeleteUser(uid); //first because you must be authorized to do that
       await authProvider.deleteAccount(data.currentPassword);

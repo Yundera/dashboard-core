@@ -4,7 +4,7 @@ import {useForm} from 'react-hook-form';
 import {useNotify} from 'react-admin';
 import {useAuthProvider} from '../useAuthProvider';
 import LoadingButton from '../LoadingButton';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 
 interface UserInput {
   email: string;
@@ -34,13 +34,12 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
       console.log("User logged in");
 
       try {
-        console.log(await authProvider.getPermissions());
         if(!authProvider.getIdentity){
           throw new Error("getIdentity not implemented in authProvider");
         }
         console.log(await authProvider.getIdentity());
       } catch (error) {
-        console.error("Error during getPermissions/getIdentity:", error);
+        console.error("Error during getIdentity:", error);
       }
 
       onNext?.();
@@ -52,6 +51,13 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
     }
   };
 
+  useEffect(() => {
+    //auto next if already logged in
+    if (authProvider && !authProvider.loading && authProvider.getEmail()) {
+      onNext();
+    }
+  }, [authProvider]);
+
   if(!authProvider || authProvider.loading) {
     return <Box
         display="flex"
@@ -62,7 +68,6 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
         <CircularProgress />
       </Box>
   }
-  console.log("authProvider:", authProvider.getEmail());
   if (authProvider.getEmail()) {
     return <Stack spacing={2}>
         <Typography variant="h5">Already registered {authProvider.getEmail()}</Typography>

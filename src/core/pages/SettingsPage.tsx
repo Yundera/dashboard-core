@@ -2,7 +2,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import {Button, Card, CardActions, CardContent, Container, Stack, Typography,} from '@mui/material';
 import {useState} from 'react';
-import {Form, Labeled, TextField, TextInput, useGetIdentity, useGetOne, useNotify, useUpdate,} from 'react-admin';
+import {Form, Labeled, TextField, TextInput, useGetOne, useNotify, useUpdate,} from 'react-admin';
 import {useFormState} from 'react-hook-form';
 import {UpdatePassword} from '../component/user/UpdatePassword';
 import ImageEditorField from '../component/user/ImageEditorField';
@@ -10,6 +10,7 @@ import {USER_STORAGE_KEY, USERS_RESOURCE} from "../UsersResource";
 import {UpdateEmail} from "../component/user/UpdateEmail";
 import {DeleteAccount} from "../component/user/DeleteAccount";
 import {useAuthProvider} from "../component/useAuthProvider";
+import {useGetIdentity} from "../component/useGetIdentity";
 
 interface SettingsPageProps {
     onDeleteUser: (userId: string) => Promise<any>;
@@ -18,7 +19,7 @@ interface SettingsPageProps {
 export const SettingsPage = ({ onDeleteUser }: SettingsPageProps) => {
     const [update] = useUpdate();
     const [isEditMode, setEditMode] = useState(false);
-    const { identity, refetch } = useGetIdentity();
+    const { identity, refetch} = useGetIdentity();
     const user = useGetOne(USERS_RESOURCE, { id: identity?.id });
     const notify = useNotify();
     const authProvider = useAuthProvider();

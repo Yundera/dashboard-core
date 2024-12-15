@@ -7,7 +7,7 @@ import {i18nProvider} from "./component/I18nProvider";
 import {appConfigContext} from "./configuration/AppConfiguationContext";
 import type {PanelInterface} from "./PanelInterface";
 import {CustomRoutes} from "ra-core";
-import type {AuthProviderInterface} from "../providers/interface/AuthProviderInterface";
+import type {AuthProviderInterface} from "../interface/AuthProviderInterface";
 
 // Define props interface for App component
 interface AppProps {

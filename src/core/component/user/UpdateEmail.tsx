@@ -1,8 +1,9 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField,} from '@mui/material';
-import {Toolbar, useGetIdentity, useNotify} from 'react-admin';
+import {Toolbar, useNotify} from 'react-admin';
 import {useForm} from 'react-hook-form';
 import {DialogCloseButton} from './DialogCloseButton';
 import {useAuthProvider} from "../useAuthProvider";
+import {useGetIdentity} from "../useGetIdentity";
 
 const EMAIL_POLICY = {
     regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,

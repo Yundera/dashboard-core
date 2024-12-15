@@ -1,8 +1,9 @@
 import {Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField,} from '@mui/material';
-import {Toolbar, useGetIdentity, useNotify} from 'react-admin';
+import {Toolbar, useNotify} from 'react-admin';
 import {useForm} from 'react-hook-form';
 import {DialogCloseButton} from './DialogCloseButton';
 import {useAuthProvider} from "../useAuthProvider";
+import {useGetIdentity} from "../useGetIdentity";
 
 const PASSWORD_POLICY = {
     regex: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/, // Example policy: Minimum 8 characters, at least one letter and one number

@@ -1,14 +1,17 @@
 import sendgrid from '@sendgrid/mail';
-import {localBackendConfig} from "./LocalBackendConfig";
+import {getConfig} from "./LocalBackendConfig";
 // Configure SendGrid API
-sendgrid.setApiKey(localBackendConfig.SENDGRID_API_KEY as string);
+sendgrid.setApiKey(getConfig("SENDGRID_API_KEY"));
 
 export async function sendEmail(msg:{
   to: string,
   from: string,
   subject: string,
   text: string,
-  html: string
+  html?: string
 }) {
+  if(!msg.html) {
+    msg.html = msg.text;
+  }
   await sendgrid.send(msg);
 }
