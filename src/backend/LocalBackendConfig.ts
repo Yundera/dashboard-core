@@ -11,6 +11,7 @@ const localBackendConfig = JSON.parse(fs.readFileSync(filePathConfig, 'utf-8'));
 export type BaseConfig = {
   // SendGrid
   SENDGRID_API_KEY: string;
+  SENDMAIL_FROM_EMAIL: string;
 
   // Frontend public env configuration
   FRONTEND_PUBLIC_ENV: string[];
