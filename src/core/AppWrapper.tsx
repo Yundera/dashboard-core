@@ -1,19 +1,19 @@
 import {ReactNode, useState} from 'react';
 import {Admin, DataProvider, localStorageStore, Resource, StoreContextProvider, useStore} from 'react-admin';
 import {Theme} from './themes/themes';
-import Layout from './layout/Layout';
-import Login from './pages/Login';
+import {Layout} from './layout/Layout';
+import {Login} from './pages/Login';
 import {i18nProvider} from "./component/I18nProvider";
 import {appConfigContext} from "./configuration/AppConfiguationContext";
 import type {PanelInterface} from "./PanelInterface";
 import {CustomRoutes} from "ra-core";
-import type {AuthProviderInterface} from "../interface/AuthProviderInterface";
+import type {EmailAuthProviderInterface} from "../interface/EmailAuthProviderInterface";
 
 // Define props interface for App component
 interface AppProps {
   children?: ReactNode;
   dashboard: React.ComponentType<any>;
-  authProvider:AuthProviderInterface;
+  authProvider:EmailAuthProviderInterface;
   dataProvider:DataProvider;
   themeList: Theme[];
   panels: PanelInterface[];
@@ -35,12 +35,6 @@ const App = ({
   const [themeName] = useStore<string>('themeName', 'default');
   const lightTheme = themeList.find(theme => theme.name === themeName)?.light;
   const darkTheme = themeList.find(theme => theme.name === themeName)?.dark;
-  const [resources, setResources] = useState<Record<string, string>>({});
-  const initialResources = panels.map(value => {
-    if(value.resource) {
-      return value.resource.name;
-    }
-  });
 
   const panelsRoutes:any[] = [];
   for (const panel of panels) {

@@ -44,6 +44,6 @@ export * from "./providers/firebase/FirebaseConfig";
 export * from "./providers/firebase/FireBaseDataProvider";
 export * from "./providers/firebase/FireBaseOptions";
 export * from "./providers/firebase/FirebaseProvider";
-export * from "./interface/AuthProviderInterface";
+export * from "./interface/EmailAuthProviderInterface";
 export * from "./interface/DataProvider";
 export * from "./interface/ExtendedUserIdentity";

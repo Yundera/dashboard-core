@@ -1,17 +1,17 @@
 import {ComponentType, Suspense, useEffect, useState} from 'react';
 import {Box, CircularProgress} from "@mui/material";
 import {loadBackendConfiguration} from "./configuration/BackendConfigurationLoader";
-import type {AuthProviderInterface} from "../interface/AuthProviderInterface";
 import {DataProvider} from "react-admin";
+import type {AuthProvider} from "ra-core";
 
 interface AppLoaderProps {
   AppComponent: ComponentType<{
-    authProvider:AuthProviderInterface;
+    authProvider:AuthProvider;
     dataProvider:DataProvider;
     permissions:Record<string,boolean>;
   }>;  // Type for the App component prop
   providers: () => Promise<{
-    authProvider:AuthProviderInterface;
+    authProvider:AuthProvider;
     dataProvider:DataProvider;
   }>;  // Function to load providers
   LoadingComponent?: ComponentType;  // Optional custom loading component
@@ -24,7 +24,7 @@ export function AppLoader({
                                   }: AppLoaderProps) {
   const [isFirebaseConfigLoaded, setIsFirebaseConfigLoaded] = useState(false);
   const [provids, setProvids] = useState<{
-    authProvider:AuthProviderInterface;
+    authProvider:AuthProvider;
     dataProvider:DataProvider;
   }>();
   const [permissions, setPermissions] = useState<Record<string,boolean>>({});

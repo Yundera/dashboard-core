@@ -1,9 +1,9 @@
-import {AppBar, Logout, TitlePortal, UserMenu, useUserMenu} from 'react-admin';
+import {AppBar as RaAppBar, Logout, TitlePortal, UserMenu, useUserMenu} from 'react-admin';
 import {Box, ListItemIcon, ListItemText, MenuItem, type Theme, useMediaQuery} from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {Link} from 'react-router-dom';
 
-import Logo from './Logo';
+import {Logo} from './Logo';
 import {AppBarToolbar} from './AppBarToolbar';
 import {appConfigContext} from "../configuration/AppConfiguationContext";
 
@@ -19,12 +19,12 @@ const ConfigurationMenu = () => {
     );
 };
 
-const CustomAppBar = () => {
+export const AppBar = () => {
     const isLargeEnough = useMediaQuery<Theme>(theme =>
         theme.breakpoints.up('sm')
     );
     return (
-        <AppBar
+        <RaAppBar
           color="secondary"
           toolbar={<AppBarToolbar />}
           userMenu={
@@ -37,8 +37,6 @@ const CustomAppBar = () => {
             {isLargeEnough && <Logo style={{maxHeight:"30px",paddingRight:"10px"}}/>}
           {isLargeEnough && <strong>{appConfigContext.defaultTitle}</strong>}
             {isLargeEnough && <Box component="span" sx={{ flex: 1 }} />}
-        </AppBar>
+        </RaAppBar>
     );
 };
-
-export default CustomAppBar;

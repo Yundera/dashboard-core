@@ -21,7 +21,7 @@ export interface AuthProviderAdditionalInterface{
   listPermissions(): Promise<Record<string,boolean>>;
 }
 
-export interface AuthProviderInterface extends AuthProviderAdditionalInterface,AuthProvider{
+export interface EmailAuthProviderInterface extends AuthProviderAdditionalInterface,AuthProvider{
   login(params: { username: string; password: string }): Promise<any>;
   getIdentity(): Promise<ExtendedUserIdentity>;
 }

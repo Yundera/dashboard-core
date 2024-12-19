@@ -7,7 +7,7 @@ import {Form, required, TextInput, useLogin, useNotify, useTranslate,} from 'rea
 import {RegisterPagePath} from "./RegisterPage";
 import {PasswordResetPage} from "./PasswordResetPage";
 
-const Login = () => {
+export const Login = () => {
     const [loading, setLoading] = useState(false);
     const translate = useTranslate();
     const navigate = useNavigate();
@@ -147,8 +147,6 @@ const Login = () => {
         </Form>
     );
 };
-
-export default Login;
 
 interface FormValues {
     username?: string;

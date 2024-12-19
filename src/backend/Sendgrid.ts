@@ -1,7 +1,9 @@
 import sendgrid from '@sendgrid/mail';
 import {getConfig} from "./LocalBackendConfig";
 // Configure SendGrid API
-sendgrid.setApiKey(getConfig("SENDGRID_API_KEY"));
+if(getConfig("SENDGRID_API_KEY")) {
+  sendgrid.setApiKey(getConfig("SENDGRID_API_KEY"));
+}
 
 export async function sendEmail(msg:{
   to: string,
@@ -10,6 +12,9 @@ export async function sendEmail(msg:{
   text: string,
   html?: string
 }) {
+  if(!getConfig("SENDGRID_API_KEY")){
+    throw new Error("SENDGRID_API_KEY is not set");
+  }
   if(!msg.from) {
     msg.from = getConfig("SENDMAIL_FROM_EMAIL");
   }

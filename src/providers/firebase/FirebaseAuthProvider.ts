@@ -13,20 +13,20 @@ import {
 // Initialize Firebase
 import {
   AuthProviderAdditionalInterface,
-  AuthProviderInterface
-} from '../../interface/AuthProviderInterface';
+  EmailAuthProviderInterface
+} from '../../interface/EmailAuthProviderInterface';
 import axios from "axios";
 import {deleteDoc, doc, getDoc, getFirestore} from 'firebase/firestore';
 import type {UserIdentity} from "ra-core/src/types.ts";
 import {initFirebase} from "./FirebaseProvider";
 import {ExtendedUserIdentity} from "../../interface/ExtendedUserIdentity";
 
-let authProvider: AuthProviderInterface;
+let authProvider: EmailAuthProviderInterface;
 
-export const getAuthProvider: () => Promise<AuthProviderInterface> = async () => {
+export const getAuthProvider: () => Promise<EmailAuthProviderInterface> = async () => {
   if (typeof window === 'undefined') {
     // Return a dummy provider for SSR
-    return {} as AuthProviderInterface;
+    return {} as EmailAuthProviderInterface;
   }
   if (!authProvider) {
     const app = await initFirebase();
