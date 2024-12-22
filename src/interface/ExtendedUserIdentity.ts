@@ -5,6 +5,5 @@ export interface ExtendedUserIdentity extends UserIdentity {
   fullName: string,
   avatar: string
   email: string,
-  emailVerified: boolean,
-  authToken: string,
+  emailVerified: boolean
 }

@@ -7,13 +7,13 @@ import {i18nProvider} from "./component/I18nProvider";
 import {appConfigContext} from "./configuration/AppConfiguationContext";
 import type {PanelInterface} from "./PanelInterface";
 import {CustomRoutes} from "ra-core";
-import type {EmailAuthProviderInterface} from "../interface/EmailAuthProviderInterface";
+import type {ExtendedAuthProviderInterface} from "../interface/ExtendedAuthProviderInterface";
 
 // Define props interface for App component
 interface AppProps {
   children?: ReactNode;
   dashboard: React.ComponentType<any>;
-  authProvider:EmailAuthProviderInterface;
+  authProvider:ExtendedAuthProviderInterface;
   dataProvider:DataProvider;
   themeList: Theme[];
   panels: PanelInterface[];

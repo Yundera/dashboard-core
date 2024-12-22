@@ -22,6 +22,7 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
   const authProvider = useAuthProvider();
   const notify = useNotify();
   const [loading, setLoading] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const handleNext = async (data: UserInput) => {
     console.log("Sign-up data:", data);
@@ -32,15 +33,6 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
 
       await authProvider.login({ username: data.email, password: data.password });
       console.log("User logged in");
-
-      try {
-        if(!authProvider.getIdentity){
-          throw new Error("getIdentity not implemented in authProvider");
-        }
-        console.log(await authProvider.getIdentity());
-      } catch (error) {
-        console.error("Error during getIdentity:", error);
-      }
 
       onNext?.();
     } catch (error) {
@@ -53,12 +45,17 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
 
   useEffect(() => {
     //auto next if already logged in
-    if (authProvider && !authProvider.loading && authProvider.getEmail()) {
-      onNext();
-    }
-  }, [authProvider]);
+    (async () => {
+      let identity = await authProvider.getIdToken();
+      console.log("Identity:", identity);
+      if(identity && identity !== "anonymous") {
+        onNext();
+      }
+      setInitialLoading(false);
+    })();
+  }, []);
 
-  if(!authProvider || authProvider.loading) {
+  if(initialLoading) {
     return <Box
         display="flex"
         justifyContent="center"
@@ -67,12 +64,6 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
       >
         <CircularProgress />
       </Box>
-  }
-  if (authProvider.getEmail()) {
-    return <Stack spacing={2}>
-        <Typography variant="h5">Already registered {authProvider.getEmail()}</Typography>
-        <Button variant="contained" onClick={()=>onNext()}>Next</Button>
-      </Stack>
   }
 
   return (

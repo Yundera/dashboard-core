@@ -1,29 +1,79 @@
-// Onboarding.tsx
-import {cloneElement, type ReactElement, type ReactNode, useState} from 'react';
-import {Box, Step, StepLabel, Stepper, Typography} from '@mui/material';
+import { cloneElement, type ReactElement, type ReactNode, useState, useEffect } from 'react';
+import { Box, Step, StepLabel, Stepper, Typography } from '@mui/material';
 
 interface OnboardingProps {
   children: ReactNode[];
 }
 
-export const Onboarding = ({children}: OnboardingProps) => {
+interface StepElement extends ReactElement {
+  props: {
+    stepName: string;
+    onNext?: (direction: boolean) => void;
+  };
+}
+
+export const Onboarding = ({ children }: OnboardingProps) => {
   const [activeStep, setActiveStep] = useState(0);
+  const [stepMap, setStepMap] = useState<Map<string, number>>(new Map());
 
-  const handleNext = (direction: boolean = true) => setActiveStep(prev => prev + (direction ? 1 : -1));
-  const steps = children.map(child => (child as ReactElement).props?.stepName);
+  // Validate step names and create step mapping
+  useEffect(() => {
+    const newStepMap = new Map<string, number>();
+    const childArray = children as StepElement[];
 
-  return (<>
-      <Typography variant="h4" align="center" gutterBottom>Getting Started</Typography>
-      <Stepper activeStep={activeStep} sx={{mb: 4}}>
+    // Validate that all children have unique step names
+    childArray.forEach((child, index) => {
+      const stepName = child.props?.stepName;
+      if (!stepName) {
+        console.error(`Step at index ${index} is missing a stepName prop`);
+        return;
+      }
+      if (newStepMap.has(stepName)) {
+        console.error(`Duplicate step name found: ${stepName}`);
+        return;
+      }
+      newStepMap.set(stepName, index);
+    });
+
+    setStepMap(newStepMap);
+  }, [children]);
+
+  const handleNext = (direction: boolean = true, stepName?: string) => {
+    // Validate that the step name matches the current step
+    if (stepName) {
+      const currentStepName = (children[activeStep] as StepElement).props?.stepName;
+      if (stepName !== currentStepName) {
+        console.error(`Step mismatch: expected ${currentStepName}, got ${stepName}`);
+        return;
+      }
+    }
+
+    // Only proceed if we're within bounds
+    const nextStep = activeStep + (direction ? 1 : -1);
+    if (nextStep >= 0 && nextStep < children.length) {
+      setActiveStep(nextStep);
+    }
+  };
+
+  const steps = (children as StepElement[]).map(child => child.props?.stepName);
+
+  return (
+    <>
+      <Typography variant="h4" align="center" gutterBottom>
+        Getting Started
+      </Typography>
+      <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
         {steps.map((label, index) => (
           <Step key={index}>
             <StepLabel>{label}</StepLabel>
           </Step>
         ))}
       </Stepper>
-      <Box sx={{mb: 2}}>
-        {/* Pass handleNext as the onNext prop */}
-        {cloneElement(children[activeStep] as ReactElement, {onNext: handleNext})}
+      <Box sx={{ mb: 2 }}>
+        {cloneElement(children[activeStep] as ReactElement, {
+          onNext: (direction: boolean) =>
+            handleNext(direction, (children[activeStep] as StepElement).props?.stepName)
+        })}
       </Box>
     </>
   );

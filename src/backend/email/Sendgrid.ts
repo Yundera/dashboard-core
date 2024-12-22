@@ -1,5 +1,5 @@
 import sendgrid from '@sendgrid/mail';
-import {getConfig} from "./LocalBackendConfig";
+import {getConfig} from "../config/LocalBackendConfig";
 // Configure SendGrid API
 if(getConfig("SENDGRID_API_KEY")) {
   sendgrid.setApiKey(getConfig("SENDGRID_API_KEY"));
