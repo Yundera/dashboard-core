@@ -28,10 +28,31 @@ async function createUser(email: string, password: string) {
   return userRecord;
 }
 
-export async function deleteUser(uid: string) {
-  await admin.firestore().collection(USERS_RESOURCE).doc(uid).delete();
+export async function disableUser(uid: string, disable = true) {
+
+  if (disable) {
+    const timestamp = admin.firestore.FieldValue.serverTimestamp();
+    await admin.firestore()
+    .collection(USERS_RESOURCE)
+    .doc(uid)
+    .update({
+      disabled: true,
+      disabledAt: timestamp,
+    });
+  } else {
+    await admin.firestore().collection(USERS_RESOURCE).doc(uid).delete();
+  }
+
+  //always remove all the permission
   await admin.firestore().collection(PERMISSION_RESOURCE).doc(uid).delete();
-  await admin.auth().deleteUser(uid);
+
+  if (disable) {
+    await admin.auth().updateUser(uid, {
+      disabled: true,
+    });
+  } else {
+    await admin.auth().deleteUser(uid);
+  }
 }
 
 async function handlePasswordReset(email: string) {
@@ -112,7 +133,7 @@ async function handleUserRoute(
         if (config?.onUserDelete) {
           config.onUserDelete(uid);//we may need the user id to do some clean up so this is first thing to do
         } else {
-          await deleteUser(uid);
+          await disableUser(uid);
         }
         return res.status(200).json("done");
       } catch (error) {

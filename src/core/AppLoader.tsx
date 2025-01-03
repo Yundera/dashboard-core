@@ -35,14 +35,16 @@ export function AppLoader({
         await loadBackendConfiguration();
         let p = await providers();
         setProvids(p);
-        setPermissions(await p.authProvider.listPermissions());
+        let permissions = await p.authProvider.listPermissions();
+        console.log('listPermissions',permissions);
+        setPermissions(permissions);
         setIsFirebaseConfigLoaded(true);
       } catch (error) {
         console.error('Error loading Firebase config:', error);
       }
     };
 
-    loadFirebaseConfig();
+    loadFirebaseConfig().catch(console.error);
   }, []);
 
   const DefaultLoader = () => (

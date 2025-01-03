@@ -67,6 +67,7 @@ class FirebaseAuthProvider implements ExtendedAuthProviderInterface {
     try {
       await this.getApp();
       const auth = getAuth();
+      await auth.authStateReady();
       const user = auth.currentUser;
 
       if (!user || !user.email) {
@@ -112,6 +113,7 @@ class FirebaseAuthProvider implements ExtendedAuthProviderInterface {
   async deleteAccount(currentPassword: string) {
     await this.getApp();
     const auth = getAuth();
+    await auth.authStateReady();
     const user = auth.currentUser;
 
     if (!user || !user.email) {
@@ -147,6 +149,7 @@ class FirebaseAuthProvider implements ExtendedAuthProviderInterface {
   async updatePassword(newPassword: string) {
     await this.getApp();
     const auth = getAuth();
+    await auth.authStateReady();
     const user = auth.currentUser;
     console.log("user", user);
     if (user) {
@@ -159,6 +162,7 @@ class FirebaseAuthProvider implements ExtendedAuthProviderInterface {
   async updateEmail(email: string, currentPassword: string) {
     await this.getApp();
     const auth = getAuth();
+    await auth.authStateReady();
     const user = auth.currentUser;
     if (user) {
       const credential = EmailAuthProvider.credential(user.email || "", currentPassword);

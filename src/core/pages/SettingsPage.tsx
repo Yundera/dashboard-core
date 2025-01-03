@@ -22,11 +22,10 @@ export const SettingsPage = ({ onDeleteUser }: SettingsPageProps) => {
     const { identity, refetch} = useGetIdentity();
     const user = useGetOne(USERS_RESOURCE, { id: identity?.id });
     const notify = useNotify();
-    const authProvider = useAuthProvider();
     if (!identity) return null;
 
     if(user.data) {
-        user.data.email = authProvider.getEmail();
+        user.data.email = identity.email;
     }
 
     const handleOnSubmit = async (values: any) => {

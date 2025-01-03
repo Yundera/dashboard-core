@@ -57,7 +57,7 @@ export const UpdateEmail = ({
             <form onSubmit={handleSubmit(onSubmit)}>
                 <DialogContent>
                     <Stack gap={1}>
-                        Current email: {authProvider.getEmail()}
+                        Current email: {identity.email}
                         <TextField
                             {...register('currentPassword', {
                                 required: 'Current password is required',
