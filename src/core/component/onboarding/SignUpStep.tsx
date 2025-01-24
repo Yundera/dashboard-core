@@ -1,10 +1,11 @@
 // SignUpStep.tsx
-import {Box, Button, CircularProgress, Stack, TextField, Typography} from '@mui/material';
+import {Box, CircularProgress, Stack, TextField, Typography} from '@mui/material';
 import {useForm} from 'react-hook-form';
 import {useNotify} from 'react-admin';
 import {useAuthProvider} from '../useAuthProvider';
 import LoadingButton from '../LoadingButton';
 import {useEffect, useState} from 'react';
+import {notifyError} from "../NotifyError";
 
 interface UserInput {
   email: string;
@@ -36,8 +37,7 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
 
       onNext?.();
     } catch (error) {
-      console.error("Error during sign-up:", error);
-      notify(`Sign-up failed: ${error}`, { type: 'error' });
+      notifyError(error, 'Sign-up failed', notify);
     } finally {
       setLoading(false);
     }
@@ -47,7 +47,6 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
     //auto next if already logged in
     (async () => {
       let identity = await authProvider.getIdToken();
-      console.log("Identity:", identity);
       if(identity && identity !== "anonymous") {
         onNext();
       }

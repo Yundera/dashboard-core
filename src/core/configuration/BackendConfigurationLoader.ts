@@ -1,8 +1,14 @@
-export async function loadBackendConfiguration(url: string = "/api/core/config/core") {
+export async function loadBackendConfiguration(url?: string) {
+  const publicBasePath = process.env.NEXT_PUBLIC_BASE_PATH;
+  if(!url){
+    url = `${publicBasePath || ""}/api/core/config/core`
+  }
   const response = await fetch(url);
   const conf = await response.json();
   (window as any).APP_CONFIG = {};
+  (window as any).APP_CONFIG.BASE_PATH = `${publicBasePath || ""}`;
   for (const key in conf) {
     (window as any).APP_CONFIG[key] = conf[key];
   }
+  console.log('Backend configuration loaded:', (window as any).APP_CONFIG);
 }

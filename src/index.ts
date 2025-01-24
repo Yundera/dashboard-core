@@ -49,3 +49,4 @@ export * from "./interface/DataProvider";
 export * from "./interface/ExtendedUserIdentity";
 export * from "./interface/AuthProviderEmailUser";
 export * from "./interface/AuthProviderPermissions";
+export {notifyError} from "./core/component/NotifyError";
