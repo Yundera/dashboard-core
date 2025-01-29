@@ -163,13 +163,15 @@ const SettingsForm = ({
 
                     &nbsp;
 
-                    <Button
+                  {/** disabled for the moment to avoid db issues
+                  <Button
                       variant="contained"
                       color="error"
                       onClick={()=> setOpenDeleteAccount(true)}
                     >
                         Delete account
                     </Button>
+                  **/}
                     <DeleteAccount
                       open={openDeleteAccount}
                       setOpen={setOpenDeleteAccount}
