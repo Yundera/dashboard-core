@@ -94,7 +94,7 @@ const ImageEditorDialog = (props: ImageEditorDialogProps) => {
 
     const updateImage = () => {
         const cropper = cropperRef.current?.cropper;
-        const croppedImage = cropper?.getCroppedCanvas().toDataURL();
+        const croppedImage = cropper?.getCroppedCanvas()?.toDataURL();
         if (croppedImage) {
             setImageSrc(croppedImage);
             setValue(

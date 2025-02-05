@@ -3,6 +3,7 @@ import { Box, Step, StepLabel, Stepper, Typography } from '@mui/material';
 
 interface OnboardingProps {
   children: ReactNode[];
+  title?: ReactNode;
 }
 
 interface StepElement extends ReactElement {
@@ -12,7 +13,7 @@ interface StepElement extends ReactElement {
   };
 }
 
-export const Onboarding = ({ children }: OnboardingProps) => {
+export const Onboarding = ({ children,title }: OnboardingProps) => {
   const [activeStep, setActiveStep] = useState(0);
   const [stepMap, setStepMap] = useState<Map<string, number>>(new Map());
 
@@ -60,7 +61,7 @@ export const Onboarding = ({ children }: OnboardingProps) => {
   return (
     <>
       <Typography variant="h4" align="center" gutterBottom>
-        Getting Started
+        {title?title:"Getting Started"}
       </Typography>
       <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
         {steps.map((label, index) => (

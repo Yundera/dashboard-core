@@ -1,5 +1,13 @@
-import {ReactNode, useState} from 'react';
-import {Admin, DataProvider, localStorageStore, Resource, StoreContextProvider, useStore} from 'react-admin';
+import {ReactNode} from 'react';
+import {
+  Admin,
+  DataProvider,
+  localStorageStore,
+  Resource,
+  StoreContextProvider,
+  type TranslationMessages,
+  useStore
+} from 'react-admin';
 import {Theme} from './themes/themes';
 import {Layout} from './layout/Layout';
 import {Login} from './pages/Login';
@@ -17,6 +25,7 @@ interface AppProps {
   dataProvider:DataProvider;
   themeList: Theme[];
   panels: PanelInterface[];
+  i18n?:Record<string,TranslationMessages>;
 }
 
 // Define props interface for AppWrapper component
@@ -30,8 +39,12 @@ const App = ({
                authProvider,
                dataProvider,
                themeList,
-               panels
+               panels,
+               i18n
              }: AppProps) => {
+  if(!themeList || themeList.length === 0) {
+    throw new Error('No theme defined');
+  }
   const [themeName] = useStore<string>('themeName', 'default');
   const lightTheme = themeList.find(theme => theme.name === themeName)?.light;
   const darkTheme = themeList.find(theme => theme.name === themeName)?.dark;
@@ -53,7 +66,7 @@ const App = ({
       dashboard={dashboard}
       loginPage={Login}
       layout={Layout(panels)}
-      i18nProvider={i18nProvider(panels)}
+      i18nProvider={i18nProvider(panels,i18n)}
       disableTelemetry
       lightTheme={lightTheme}
       darkTheme={darkTheme}
