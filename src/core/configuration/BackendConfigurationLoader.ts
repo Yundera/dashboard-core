@@ -1,3 +1,5 @@
+//frontend method
+
 export async function loadBackendConfiguration(url?: string) {
   const publicBasePath = process.env.NEXT_PUBLIC_BASE_PATH;
   if(!url){

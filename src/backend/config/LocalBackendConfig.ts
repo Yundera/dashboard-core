@@ -23,5 +23,5 @@ export type BaseConfig = {
  * @returns Configuration value
  */
 export function getConfig<T extends BaseConfig,K = string>(key: keyof T): K {
-  return localBackendConfig[key as unknown as K];
+  return process.env[key as unknown as string] || localBackendConfig[key as unknown as K];
 }
