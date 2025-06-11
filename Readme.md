@@ -2,6 +2,12 @@
 
 A modular dashboard library for Next.js applications with Firebase integration.
 
+## Usage
+This repository is used by
+- https://github.com/yundera/settings-center-app
+- https://github.com/ApteroSAS/v-nas-dashboard.git
+- https://github.com/ApteroSAS/mesh-dashboard-root.git
+
 ## Overview
 
 Dashboard Core is a source library module that provides core dashboard functionality including API handling, authentication, and database integration. This library must be compiled within the parent project and cannot be used as a standalone package.
