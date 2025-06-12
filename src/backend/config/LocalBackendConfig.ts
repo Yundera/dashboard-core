@@ -6,7 +6,16 @@ const rootDir = process.cwd();
 console.log('CWD:', rootDir);
 
 const filePathConfig = path.join(rootDir, 'config/core.env.json');
-const localBackendConfig = JSON.parse(fs.readFileSync(filePathConfig, 'utf-8'));
+
+// Safely load config file with fallback
+let localBackendConfig: Record<string, any> = {};
+try {
+  localBackendConfig = JSON.parse(fs.readFileSync(filePathConfig, 'utf-8'));
+  console.log('Config file loaded successfully');
+} catch (error) {
+  console.warn(`Config file not found or invalid: ${filePathConfig}`);
+  console.warn('Using environment variables only');
+}
 
 export type BaseConfig = {
   // SendGrid
@@ -22,6 +31,6 @@ export type BaseConfig = {
  * @param key Key to retrieve from config
  * @returns Configuration value
  */
-export function getConfig<T extends BaseConfig,K = string>(key: keyof T): K {
-  return process.env[key as unknown as string] || localBackendConfig[key as unknown as K];
+export function getConfig<T extends BaseConfig, K = string>(key: keyof T): K {
+  return process.env[key as unknown as string] || localBackendConfig[key as unknown as string];
 }
