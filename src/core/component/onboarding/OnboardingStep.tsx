@@ -14,7 +14,6 @@ export const OnboardingStep = ({ onNext = () => {}, stepName, children , backBut
 
   return (
     <Stack spacing={2}>
-      <Typography variant="h5">{stepName}</Typography>
       {children}
       {nextButton && <Button variant="contained" onClick={()=>onNext(true)}>Next</Button>}
       {backButton && <Button variant="text" onClick={()=>onNext(false)}>Back</Button>}
