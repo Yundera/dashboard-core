@@ -94,6 +94,15 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
             loading={loading}
             disabled={!isValid}
             fullWidth
+            sx={{ 
+              backgroundColor: 'primary.main',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'primary.dark',
+              },
+              borderRadius: '36px',
+              boxShadow: 'none',
+            }}
           >
             Next
           </LoadingButton>

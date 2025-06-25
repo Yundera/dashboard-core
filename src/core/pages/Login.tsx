@@ -7,6 +7,9 @@ import {Form, required, TextInput, useLogin, useNotify, useTranslate,} from 'rea
 import {RegisterPagePath} from "./RegisterPage";
 import {PasswordResetPage} from "./PasswordResetPage";
 
+import GradientButton from '../component/GradientButton';
+import GradientCard from '../component/GradientCard';
+
 export const Login = () => {
     const [loading, setLoading] = useState(false);
     const translate = useTranslate();
@@ -59,7 +62,7 @@ export const Login = () => {
                     backgroundSize: 'cover',
                 }}
             >
-              <Card sx={{minWidth: 300, marginTop: '6em'}}>
+              <GradientCard sx={{minWidth: 300, marginTop: '6em'}}>
                 <Box
                   sx={{
                     margin: '1em',
@@ -67,8 +70,8 @@ export const Login = () => {
                     justifyContent: 'center',
                   }}
                 >
-                  <Avatar sx={{bgcolor: 'secondary.main'}}>
-                    <LockIcon/>
+                  <Avatar sx={{bgcolor: 'primary.main'}}>
+                    <LockIcon/> 
                   </Avatar>
                 </Box>
                 <Box
@@ -76,7 +79,8 @@ export const Login = () => {
                     marginTop: '1em',
                     display: 'flex',
                     justifyContent: 'center',
-                    color: theme => theme.palette.grey[500],
+                    fontSize: '0.8em',
+                    color: theme => theme.palette.text.primary,
                   }}
                 >
                   Welcome!
@@ -91,7 +95,7 @@ export const Login = () => {
                       validate={required()}
                     />
                   </Box>
-                  <Box sx={{marginTop: '1em'}}>
+                  <Box sx={{marginTop: '0.25em'}}>
                     <TextInput
                       source="password"
                       label={translate('ra.auth.password')}
@@ -102,7 +106,7 @@ export const Login = () => {
                   </Box>
                 </Box>
                 <CardActions sx={{padding: '0 1em 1em 1em'}}>
-                  <Button
+                  <GradientButton
                     variant="contained"
                     type="submit"
                     color="primary"
@@ -113,10 +117,10 @@ export const Login = () => {
                       <CircularProgress size={25} thickness={2}/>
                     )}
                     {translate('ra.auth.sign_in')}
-                  </Button>
+                  </GradientButton>
                 </CardActions>
                 <CardActions sx={{padding: '0 1em 1em 1em'}}>
-                  <Button
+                  <GradientButton
                     variant="contained"
                     type="button"
                     color="primary"
@@ -128,13 +132,13 @@ export const Login = () => {
                       <CircularProgress size={25} thickness={2}/>
                     )}
                     {translate('auth.sign_up')}
-                  </Button>
+                  </GradientButton>
                 </CardActions>
                 <CardActions sx={{padding: '0 1em 1em 1em'}}>
                   <Button
                     variant="text"
                     type="button"
-                    color="primary"
+                    color="secondary"
                     disabled={loading}
                     fullWidth
                     onClick={() => navigate(PasswordResetPage.path)}
@@ -142,7 +146,23 @@ export const Login = () => {
                     {translate('auth.forgot_password')}
                   </Button>
                 </CardActions>
-              </Card>
+              </GradientCard>
+
+              <Box
+                  component="img"
+                  src="/yunderaLogo.svg"
+                  alt="Logo"
+                  sx={{
+                      position: 'absolute',
+                      bottom: 16,        // px from bottom
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      width: 120,
+                      height: 'auto',
+                      zIndex: -1000,
+                      filter: 'drop-shadow(-1px 1px 2px rgba(0,0,0,0.3))',
+                  }}
+              />
             </Box>
         </Form>
     );

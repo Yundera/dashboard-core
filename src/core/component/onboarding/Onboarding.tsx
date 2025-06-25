@@ -60,10 +60,31 @@ export const Onboarding = ({ children,title }: OnboardingProps) => {
 
   return (
     <>
-      <Typography variant="h4" align="center" gutterBottom>
-        {title?title:"Getting Started"}
+      <Typography variant="h4" align="center" gutterBottom sx={{ color: 'text.primary', marginBottom: '4px' }}>
+        {title?title:"Let's set up your Private Cloud Server (PCS)"}
       </Typography>
-      <Stepper activeStep={activeStep} sx={{ mb: 4 }}>
+      <Typography variant="subtitle1" align="center" gutterBottom sx={{ color: 'text.primary', marginBottom: '24px' }}>
+        {title?title:"Just 4 steps to own your data and apps"}
+      </Typography>
+      <Stepper
+        activeStep={activeStep}
+        sx={{
+          mb: 4,
+
+          // Hide the number
+          '& .MuiStepIcon-text': {
+            display: 'none',
+          },
+          // Base color for every step circle
+          '& .MuiStepIcon-root': {
+            color: 'text.secondary',
+          },
+          // Override for the active and completed steps
+          '& .MuiStepIcon-root.Mui-active, & .MuiStepIcon-root.Mui-completed': {
+            color: 'primary.main',
+          },
+        }}
+      >
         {steps.map((label, index) => (
           <Step key={index}>
             <StepLabel>{label}</StepLabel>
