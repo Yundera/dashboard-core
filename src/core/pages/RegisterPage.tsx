@@ -6,6 +6,7 @@ import {Children, ReactElement} from "react";
 import {OnboardingStepProps} from "../component/onboarding/OnboardingStep";
 
 import PrimaryContainer from "../component/PrimaryContainer";
+import { getConfig } from "../configuration/getConfigFrontEnd";
 
 interface RegisterPageProps {
   children: ReactElement<OnboardingStepProps> | ReactElement<OnboardingStepProps>[];
@@ -35,7 +36,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  //
       </PrimaryContainer>
       <Box
           component="img"
-          src="/yunderaLogo.svg"
+          src={`${getConfig("BASE_PATH")}/yunderaLogo.svg`}
           alt="Logo"
           sx={{
               position: 'absolute',

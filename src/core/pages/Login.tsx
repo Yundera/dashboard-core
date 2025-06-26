@@ -5,6 +5,7 @@ import {Avatar, Box, Button, Card, CardActions, CircularProgress,} from '@mui/ma
 import LockIcon from '@mui/icons-material/Lock';
 import {Form, required, TextInput, useLogin, useNotify, useTranslate,} from 'react-admin';
 import {RegisterPagePath} from "./RegisterPage";
+import { getConfig } from '../configuration/getConfigFrontEnd';
 import {PasswordResetPage} from "./PasswordResetPage";
 
 import GradientButton from '../component/GradientButton';
@@ -150,7 +151,7 @@ export const Login = () => {
 
               <Box
                   component="img"
-                  src="/yunderaLogo.svg"
+                  src={`${getConfig("BASE_PATH")}/yunderaLogo.svg`}
                   alt="Logo"
                   sx={{
                       position: 'absolute',
