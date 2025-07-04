@@ -10,6 +10,7 @@ export * from "./core/UsersResource";
 export * from "./core/component/I18nProvider";
 export * from "./core/component/LoadingButton";
 export * from "./core/component/LoadinIndicator";
+export * from "./core/component/NavigationItems";
 export * from "./core/component/TimeLoaderComponent";
 export * from "./core/component/useAuthProvider";
 export * from "./core/component/WrapperElement";

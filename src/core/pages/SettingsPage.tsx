@@ -1,6 +1,6 @@
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import {Button, Card, CardActions, CardContent, Container, Stack, Typography,} from '@mui/material';
+import {Button, Card, CardActions, CardContent, Container, Stack, Typography, useMediaQuery, useTheme,} from '@mui/material';
 import {useState} from 'react';
 import {Form, Labeled, TextField, TextInput, useGetOne, useNotify, useUpdate,} from 'react-admin';
 import {useFormState} from 'react-hook-form';
@@ -11,17 +11,21 @@ import {UpdateEmail} from "../component/user/UpdateEmail";
 import {DeleteAccount} from "../component/user/DeleteAccount";
 import {useAuthProvider} from "../component/useAuthProvider";
 import {useGetIdentity} from "../component/useGetIdentity";
+import {NavigationItems} from "../component/NavigationItems";
 
 interface SettingsPageProps {
     onDeleteUser: (userId: string) => Promise<any>;
+    panels?: any[];
 }
 
-export const SettingsPage = ({ onDeleteUser }: SettingsPageProps) => {
+export const SettingsPage = ({ onDeleteUser, panels = [] }: SettingsPageProps) => {
     const [update] = useUpdate();
     const [isEditMode, setEditMode] = useState(false);
     const { identity, refetch} = useGetIdentity();
     const user = useGetOne(USERS_RESOURCE, { id: identity?.id });
     const notify = useNotify();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
     if (!identity) return null;
 
     if(user.data) {
@@ -57,6 +61,9 @@ export const SettingsPage = ({ onDeleteUser }: SettingsPageProps) => {
 
     return (
       <Container maxWidth="sm" sx={{ mt: 4 }}>
+          {isMobile && (
+            <NavigationItems panels={panels} variant="mobile" />
+          )}
           <Form onSubmit={handleOnSubmit} record={user.data}>
               <SettingsForm
                 isEditMode={isEditMode}
