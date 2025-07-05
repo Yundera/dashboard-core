@@ -1,6 +1,6 @@
 import {Onboarding} from "../component/onboarding/Onboarding";
 import {SignUpStep} from "../component/onboarding/SignUpStep";
-import {Box, Stack, Typography} from "@mui/material";
+import {Box, Stack, Typography, useTheme} from "@mui/material";
 import {useConfigurationContext} from "../configuration/ConfigurationContext";
 import {Children, ReactElement} from "react";
 import {OnboardingStepProps} from "../component/onboarding/OnboardingStep";
@@ -14,6 +14,7 @@ interface RegisterPageProps {
 
 export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  // Add children prop here
   const {logo, title} = useConfigurationContext();
+  const theme = useTheme();
 
   return (
     <Stack
@@ -22,13 +23,44 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  //
         p: 2,
         justifyContent: 'center',
         alignItems: 'center',
+        '@media (max-width: 600px)': {
+          p: 0,
+          justifyContent: 'flex-start',
+          paddingTop: '10vh',
+        },
       }}
     >
-      <Stack direction="row" alignItems="center" gap={1} sx={{mb: 4}}>
-        <img src={logo} alt={title} width={50}/>
-        <Typography component="span" variant="h5">{title}</Typography>
+      <Stack direction="row" alignItems="center" gap={1} sx={{
+        mb: 4,
+        '@media (max-width: 600px)': {
+          mb: 3,
+          flexDirection: 'column',
+          gap: 0.5,
+        },
+      }}>
+        <img src={logo} alt={title} width={50} style={{
+          '@media (max-width: 600px)': {
+            width: 40,
+          },
+        }}/>
+        <Typography component="span" variant="h5" sx={{
+          '@media (max-width: 600px)': {
+            fontSize: '1.1rem',
+            fontWeight: 600,
+            textAlign: 'center',
+          },
+        }}>{title}</Typography>
       </Stack>
-      <PrimaryContainer sx={{p: 4}}>
+      <PrimaryContainer sx={{
+        p: 4,
+        '@media (max-width: 600px)': {
+          p: 1.5,
+          width: '95%',
+          maxWidth: '95%',
+          margin: '0 auto',
+          boxShadow: 'none',
+        },
+      }}>
         <Onboarding>
           <SignUpStep stepName={'Account creation'}/>
           {...Children.toArray(children)}
@@ -47,6 +79,9 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  //
               height: 'auto',
               zIndex: -1000,
               filter: 'drop-shadow(-1px 1px 2px rgba(0,0,0,0.3))',
+              '@media (max-width: 600px)': {
+                display: 'none',
+              },
           }}
       />
     </Stack>

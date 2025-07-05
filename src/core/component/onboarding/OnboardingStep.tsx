@@ -1,5 +1,5 @@
 // ExampleStep.tsx
-import {Button, Stack, Typography} from '@mui/material';
+import {Button, Stack, Typography, useTheme} from '@mui/material';
 import type {ReactNode} from 'react';
 
 export interface OnboardingStepProps {
@@ -11,12 +11,36 @@ export interface OnboardingStepProps {
 }
 
 export const OnboardingStep = ({ onNext = () => {}, stepName, children , backButton=true,nextButton=true}: OnboardingStepProps) => {
+  const theme = useTheme();
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{
+      '@media (max-width: 600px)': {
+        spacing: 1.5,
+      },
+    }}>
       {children}
-      {nextButton && <Button variant="contained" onClick={()=>onNext(true)}>Next</Button>}
-      {backButton && <Button variant="text" onClick={()=>onNext(false)}>Back</Button>}
+      <Stack direction="row" spacing={2} sx={{
+        '@media (max-width: 600px)': {
+          flexDirection: 'column',
+          spacing: 1,
+        },
+      }}>
+        {nextButton && <Button variant="contained" onClick={()=>onNext(true)} sx={{
+          '@media (max-width: 600px)': {
+            order: 1,
+            fontSize: '0.9rem',
+            py: 1.5,
+          },
+        }}>Next</Button>}
+        {backButton && <Button variant="text" onClick={()=>onNext(false)} sx={{
+          '@media (max-width: 600px)': {
+            order: 2,
+            fontSize: '0.85rem',
+            py: 1,
+          },
+        }}>Back</Button>}
+      </Stack>
     </Stack>
   );
 };
