@@ -38,11 +38,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  //
           gap: 0.5,
         },
       }}>
-        <img src={logo} alt={title} width={50} style={{
-          '@media (max-width: 600px)': {
-            width: 40,
-          },
-        }}/>
+        <img src={logo} alt={title} width={50}/>
         <Typography component="span" variant="h5" sx={{
           '@media (max-width: 600px)': {
             fontSize: '1.1rem',
