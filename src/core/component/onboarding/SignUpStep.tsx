@@ -1,11 +1,12 @@
 // SignUpStep.tsx
-import {Box, CircularProgress, Stack, TextField, Typography} from '@mui/material';
+import {Box, CircularProgress, Stack, TextField, Typography, IconButton, InputAdornment} from '@mui/material';
 import {useForm} from 'react-hook-form';
 import {useNotify} from 'react-admin';
 import {useAuthProvider} from '../useAuthProvider';
 import LoadingButton from '../LoadingButton';
 import {useEffect, useState} from 'react';
 import {notifyError} from "../NotifyError";
+import {Visibility, VisibilityOff} from '@mui/icons-material';
 
 interface UserInput {
   email: string;
@@ -24,6 +25,7 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
   const notify = useNotify();
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleNext = async (data: UserInput) => {
     console.log("Sign-up data:", data);
@@ -41,6 +43,10 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleTogglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   useEffect(() => {
@@ -82,10 +88,23 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
         <TextField
           {...register('password', {required: true})}
           label="Password"
-          type="password"
+          type={showPassword ? 'text' : 'password'}
           variant="outlined"
           fullWidth
           required
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={handleTogglePasswordVisibility}
+                  edge="end"
+                  aria-label="toggle password visibility"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
         />
         <Stack direction="row" spacing={2} mt={2}>
           <LoadingButton
