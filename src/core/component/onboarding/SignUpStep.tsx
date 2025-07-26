@@ -1,5 +1,5 @@
 // SignUpStep.tsx
-import {Box, CircularProgress, Stack, TextField, Typography, IconButton, InputAdornment} from '@mui/material';
+import {Box, CircularProgress, Stack, TextField, Typography, IconButton, InputAdornment, Checkbox, FormControlLabel, Link} from '@mui/material';
 import {useForm} from 'react-hook-form';
 import {useNotify} from 'react-admin';
 import {useAuthProvider} from '../useAuthProvider';
@@ -11,6 +11,7 @@ import {Visibility, VisibilityOff} from '@mui/icons-material';
 interface UserInput {
   email: string;
   password: string;
+  termsAccepted: boolean;
 }
 
 interface SignUpStepProps {
@@ -20,7 +21,10 @@ interface SignUpStepProps {
 
 export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
 
-  const { register, handleSubmit, formState: { isValid } } = useForm<UserInput>({ mode: 'onChange' });
+  const { register, handleSubmit, formState: { isValid } } = useForm<UserInput>({ 
+    mode: 'onChange',
+    defaultValues: { termsAccepted: false }
+  });
   const authProvider = useAuthProvider();
   const notify = useNotify();
   const [loading, setLoading] = useState(false);
@@ -105,6 +109,27 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
               </InputAdornment>
             ),
           }}
+        />
+        <br/>
+        <FormControlLabel
+          control={
+            <Checkbox
+              {...register('termsAccepted', { required: true })}
+            />
+          }
+          label={
+            <Typography variant="body2">
+              I agree to the{' '}
+              <Link
+                href="http://yundera.com/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                color="primary"
+              >
+                Terms and Conditions
+              </Link>
+            </Typography>
+          }
         />
         <Stack direction="row" spacing={2} mt={2}>
           <LoadingButton
