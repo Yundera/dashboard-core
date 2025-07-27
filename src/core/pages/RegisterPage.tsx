@@ -1,8 +1,9 @@
 import {Onboarding} from "../component/onboarding/Onboarding";
 import {SignUpStep} from "../component/onboarding/SignUpStep";
+import {TryBeforeBuyStep} from "../component/onboarding/TryBeforeBuyStep";
 import {Box, Stack, Typography, useTheme} from "@mui/material";
 import {useConfigurationContext} from "../configuration/ConfigurationContext";
-import {Children, ReactElement} from "react";
+import {Children, ReactElement, useState} from "react";
 import {OnboardingStepProps} from "../component/onboarding/OnboardingStep";
 
 import PrimaryContainer from "../component/PrimaryContainer";
@@ -15,21 +16,31 @@ interface RegisterPageProps {
 export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  // Add children prop here
   const {logo, title} = useConfigurationContext();
   const theme = useTheme();
+  const [showTryBeforeBuy, setShowTryBeforeBuy] = useState(true);
+
+  const handleTryDemo = () => {
+    window.open('https://demo.nsl.sh', '_blank', 'noopener,noreferrer');
+  };
+
+  const handleBuyYundera = () => {
+    setShowTryBeforeBuy(false);
+  };
 
   return (
-    <Stack
-      sx={{
-        minHeight: '100vh',
-        p: 2,
-        justifyContent: 'center',
-        alignItems: 'center',
-        '@media (max-width: 600px)': {
-          p: 0,
-          justifyContent: 'flex-start',
-          paddingTop: '10vh',
-        },
-      }}
-    >
+    <>
+      <Stack
+        sx={{
+          minHeight: '100vh',
+          p: 2,
+          justifyContent: 'center',
+          alignItems: 'center',
+          '@media (max-width: 600px)': {
+            p: 0,
+            justifyContent: 'flex-start',
+            paddingTop: '10vh',
+          },
+        }}
+      >
       <Stack direction="row" alignItems="center" gap={1} sx={{
         mb: 4,
         '@media (max-width: 600px)': {
@@ -81,6 +92,12 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  //
           }}
       />
     </Stack>
+      <TryBeforeBuyStep
+        open={showTryBeforeBuy}
+        onTryDemo={handleTryDemo}
+        onBuyYundera={handleBuyYundera}
+      />
+    </>
   );
 };
 

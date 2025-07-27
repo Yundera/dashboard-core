@@ -17,6 +17,7 @@ export * from "./core/component/WrapperElement";
 export * from "./core/component/onboarding/Onboarding";
 export * from "./core/component/onboarding/OnboardingStep";
 export * from "./core/component/onboarding/SignUpStep";
+export * from "./core/component/onboarding/TryBeforeBuyStep";
 export * from "./core/component/user/DeleteAccount";
 export * from "./core/component/user/DialogCloseButton";
 export * from "./core/component/user/ImageEditorField";
