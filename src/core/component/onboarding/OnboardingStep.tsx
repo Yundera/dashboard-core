@@ -1,6 +1,8 @@
 // ExampleStep.tsx
 import {Button, Stack, Typography, useTheme} from '@mui/material';
 import type {ReactNode} from 'react';
+import { useGlobalLoading } from '../GlobalLoadingContext';
+import { useEffect } from 'react';
 
 export interface OnboardingStepProps {
   onNext?: (dir?:boolean) => void;
@@ -12,6 +14,15 @@ export interface OnboardingStepProps {
 
 export const OnboardingStep = ({ onNext = () => {}, stepName, children , backButton=true,nextButton=true}: OnboardingStepProps) => {
   const theme = useTheme();
+  const globalLoading = useGlobalLoading();
+
+  // Hide global loading when final step mounts (no next button = final step)
+  useEffect(() => {
+    if (!nextButton && !backButton) {
+      console.log('🎉 REGISTRATION COMPLETE - Final step reached');
+      globalLoading.hideLoading();
+    }
+  }, [nextButton, backButton]);
 
   return (
     <Stack spacing={2} sx={{

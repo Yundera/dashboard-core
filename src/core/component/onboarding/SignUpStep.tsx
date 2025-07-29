@@ -1,10 +1,11 @@
 // SignUpStep.tsx
-import {Box, CircularProgress, Stack, TextField, Typography, IconButton, InputAdornment, Checkbox, FormControlLabel, Link} from '@mui/material';
+import {Box, CircularProgress, Stack, TextField, Typography, IconButton, InputAdornment, Checkbox, FormControlLabel, Link, Button, Alert} from '@mui/material';
 import {useForm} from 'react-hook-form';
 import {useNotify} from 'react-admin';
 import {useAuthProvider} from '../useAuthProvider';
 import LoadingButton from '../LoadingButton';
-import {useEffect, useState} from 'react';
+import { useGlobalLoading } from '../GlobalLoadingContext';
+import React, {useEffect, useState, useRef} from 'react';
 import {notifyError} from "../NotifyError";
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 
@@ -27,25 +28,22 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
   });
   const authProvider = useAuthProvider();
   const notify = useNotify();
+  const globalLoading = useGlobalLoading();
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const prevGlobalLoadingRef = useRef(false);
 
   const handleNext = async (data: UserInput) => {
-    console.log("Sign-up data:", data);
     setLoading(true);
     try {
       await authProvider.registerUser(data.email, data.password);
-      console.log("User registered");
-
       await authProvider.login({ username: data.email, password: data.password });
-      console.log("User logged in");
-
       onNext?.();
     } catch (error) {
+      console.error("Account creation error:", error);
       notifyError(error, 'Sign-up failed', notify);
-    } finally {
-      setLoading(false);
+      setLoading(false); // This triggers LoadingButton to hide global loading
     }
   };
 
@@ -59,17 +57,33 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
       let identity = await authProvider.getIdToken();
       if(identity && identity !== "anonymous") {
         onNext();
+      } else {
+        setInitialLoading(false);
       }
-      setInitialLoading(false);
     })();
   }, []);
+
+  // Handle continue click from global loading context
+  React.useEffect(() => {
+    // Only proceed if loading transitioned from true to false (user clicked Continue)
+    const wasGlobalLoading = prevGlobalLoadingRef.current;
+    const isCurrentlyLoading = globalLoading.isLoading;
+    
+    // Update ref for next render
+    prevGlobalLoadingRef.current = isCurrentlyLoading;
+    
+    // Detect transition: was loading -> now not loading (user clicked Continue)
+    if (wasGlobalLoading && !isCurrentlyLoading && !loading && !initialLoading) {
+      onNext();
+    }
+  }, [globalLoading.isLoading, loading, initialLoading]);
 
   if(initialLoading) {
     return <Box
         display="flex"
         justifyContent="center"
         alignItems="center"
-        minHeight="10vh" // adjust height as needed
+        minHeight="10vh"
       >
         <CircularProgress />
       </Box>
@@ -138,6 +152,9 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
             loading={loading}
             disabled={!isValid}
             fullWidth
+            useGlobalOverlay={true}
+            loadingTitle="Creating your account..."
+            loadingSubtitle="Setting up your secure authentication and preparing your dashboard."
             sx={{ 
               backgroundColor: 'primary.main',
               color: 'white',
