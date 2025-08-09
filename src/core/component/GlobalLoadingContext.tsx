@@ -151,13 +151,13 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
 
   // Update ready state based on loading completion AND user interaction
   React.useEffect(() => {
-    const shouldShowContinue = loadingState.loadingComplete && hasInteractedWithPanel && !loadingState.devMode;
+    const shouldShowContinue = Boolean(loadingState.loadingComplete && hasInteractedWithPanel && !loadingState.devMode);
     setIsReadyToContinue(shouldShowContinue);
   }, [loadingState.loadingComplete, hasInteractedWithPanel, loadingState.devMode]);
 
   // Auto-hide if loading completes but user never interacted
   React.useEffect(() => {
-    if (loadingState.loadingComplete && !hasInteractedWithPanel && !loadingState.devMode) {
+    if (loadingState.loadingComplete && !hasInteractedWithPanel && !(loadingState.devMode ?? false)) {
       const autoHideTimer = setTimeout(() => {
         hideLoading();
       }, 2000); // Auto-hide after 2 seconds if no interaction
@@ -301,7 +301,7 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
 
                 {/* App Carousel - below spinner */}
                 <AppCarousel 
-                  onHoverStateChange={() => {}} // No longer needed, using panel hover
+                  onHoverStateChange={(hovering: boolean) => {}} // No longer needed, using panel hover
                   autoSlideInterval={4000}
                   persistentIndex={carouselIndex}
                   persistentProgress={carouselProgress}

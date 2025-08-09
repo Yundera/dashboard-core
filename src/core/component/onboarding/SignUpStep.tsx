@@ -32,10 +32,12 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
+  const [hasError, setHasError] = useState(false);
   const prevGlobalLoadingRef = useRef(false);
 
   const handleNext = async (data: UserInput) => {
     setLoading(true);
+    setHasError(false); // Reset error state
     try {
       await authProvider.registerUser(data.email, data.password);
       await authProvider.login({ username: data.email, password: data.password });
@@ -43,7 +45,10 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
     } catch (error) {
       console.error("Account creation error:", error);
       notifyError(error, 'Sign-up failed', notify);
-      setLoading(false); // This triggers LoadingButton to hide global loading
+      setHasError(true); // Mark that an error occurred
+      setLoading(false); // This triggers LoadingButton to mark loading complete
+      // For registration errors, immediately hide loading instead of showing Continue button
+      globalLoading.hideLoading();
     }
   };
 
@@ -73,10 +78,11 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
     prevGlobalLoadingRef.current = isCurrentlyLoading;
     
     // Detect transition: was loading -> now not loading (user clicked Continue)
-    if (wasGlobalLoading && !isCurrentlyLoading && !loading && !initialLoading) {
+    // BUT: Do NOT proceed if there was an error - only proceed on successful completion
+    if (wasGlobalLoading && !isCurrentlyLoading && !loading && !initialLoading && !hasError) {
       onNext();
     }
-  }, [globalLoading.isLoading, loading, initialLoading]);
+  }, [globalLoading.isLoading, loading, initialLoading, hasError]);
 
   if(initialLoading) {
     return <Box

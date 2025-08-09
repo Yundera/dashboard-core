@@ -88,23 +88,89 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  //
         </Onboarding>
       </PrimaryContainer>
       <Box
+        sx={{
+          position: 'absolute',
+          bottom: 16,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          zIndex: -1000,
+          '@media (max-width: 600px)': {
+            position: 'relative',
+            left: 'auto',
+            transform: 'none',
+            bottom: 'auto',
+            marginTop: 3,
+            justifyContent: 'center',
+            flexDirection: 'column',
+            gap: 1,
+          },
+        }}
+      >
+        <Box
           component="img"
           src={`${getConfig("BASE_PATH")}/yunderaLogo.svg`}
           alt="Logo"
           sx={{
-              position: 'absolute',
-              bottom: 16,        // px from bottom
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: 120,
-              height: 'auto',
-              zIndex: -1000,
-              filter: 'drop-shadow(-1px 1px 2px rgba(0,0,0,0.3))',
-              '@media (max-width: 600px)': {
-                display: 'none',
-              },
+            width: 120,
+            height: 'auto',
+            filter: 'drop-shadow(-1px 1px 2px rgba(0,0,0,0.3))',
+            '@media (max-width: 600px)': {
+              width: 80,
+            },
           }}
-      />
+        />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'flex-start',
+            '@media (max-width: 600px)': {
+              alignItems: 'center',
+              textAlign: 'center',
+            },
+          }}
+        >
+          <Typography
+            variant="body2"
+            sx={{
+              color: 'text.secondary',
+              fontWeight: 500,
+              mb: 0.5,
+            }}
+          >
+            Need help?
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 0.3,
+            }}
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'text.secondary',
+                fontSize: '0.75rem',
+              }}
+            >
+              +33 6-44-69-69-15
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                color: 'text.secondary',
+                fontSize: '0.75rem',
+              }}
+            >
+              contact@yundera.com
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
     </Stack>
       <TryBeforeBuyStep
         open={showTryBeforeBuy}

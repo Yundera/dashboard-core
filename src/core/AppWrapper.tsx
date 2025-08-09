@@ -16,6 +16,7 @@ import {appConfigContext} from "./configuration/AppConfiguationContext";
 import type {PanelInterface} from "./PanelInterface";
 import {CustomRoutes} from "ra-core";
 import type {ExtendedAuthProviderInterface} from "../interface/ExtendedAuthProviderInterface";
+import {GlobalLoadingProvider} from "./component/GlobalLoadingContext";
 
 // Define props interface for App component
 interface AppProps {
@@ -97,14 +98,16 @@ export const AppWrapper = ({
                       panels,
                     }: AppWrapperProps) => (
   <StoreContextProvider value={store}>
-    <App
-      authProvider={authProvider}
-      dataProvider={dataProvider}
-      dashboard={dashboard}
-      panels={panels}
-      themeList={themeList}
-    >
-      {children}
-    </App>
+    <GlobalLoadingProvider>
+      <App
+        authProvider={authProvider}
+        dataProvider={dataProvider}
+        dashboard={dashboard}
+        panels={panels}
+        themeList={themeList}
+      >
+        {children}
+      </App>
+    </GlobalLoadingProvider>
   </StoreContextProvider>
 );

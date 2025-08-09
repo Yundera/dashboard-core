@@ -17,15 +17,24 @@ type EmailMessage = {
 
 // User management handlers
 async function createUser(email: string, password: string) {
-  const userRecord = await admin.auth().createUser({
-    email,
-    password,
-  });
+  try {
+    const userRecord = await admin.auth().createUser({
+      email,
+      password,
+    });
 
-  await admin.firestore().collection(USERS_RESOURCE).doc(userRecord.uid).set({});
-  await admin.firestore().collection(PERMISSION_RESOURCE).doc(userRecord.uid).set({});
-  await addPermission(userRecord.uid, USER_PERMISSION);
-  return userRecord;
+    await admin.firestore().collection(USERS_RESOURCE).doc(userRecord.uid).set({});
+    await admin.firestore().collection(PERMISSION_RESOURCE).doc(userRecord.uid).set({});
+    await addPermission(userRecord.uid, USER_PERMISSION);
+    return userRecord;
+  } catch (error: any) {
+    console.error('createUser error:', error);
+    // Check if it's a duplicate email error
+    if (error.code === 'auth/email-already-exists') {
+      throw new Error('An account with this email already exists. Please use a different email or try logging in.');
+    }
+    throw error; // Re-throw other errors
+  }
 }
 
 export async function disableUser(uid: string, disable = true) {
