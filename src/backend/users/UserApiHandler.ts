@@ -1,10 +1,14 @@
-import {NextApiRequest, NextApiResponse} from 'next';
-import {admin, config as fbConfig} from './FirebaseAdminApi';
-import {sendEmail} from "../email/Sendgrid";
-import {PERMISSION_RESOURCE, USER_PERMISSION, USERS_RESOURCE} from "../../core/UsersResource";
-import {addPermission, getPermissions} from "./Permission";
-import {validateMethod} from "../generic/ValidateMethod";
-import {authenticateRequest} from "./AuthenticateRequest";
+import { NextApiRequest, NextApiResponse } from "next";
+import { admin, config as fbConfig } from "./FirebaseAdminApi";
+import { sendEmail } from "../email/Sendgrid";
+import {
+  PERMISSION_RESOURCE,
+  USER_PERMISSION,
+  USERS_RESOURCE,
+} from "../../core/UsersResource";
+import { addPermission, getPermissions } from "./Permission";
+import { validateMethod } from "../generic/ValidateMethod";
+import { authenticateRequest } from "./AuthenticateRequest";
 
 // Types
 type EmailMessage = {
@@ -23,28 +27,34 @@ async function createUser(email: string, password: string) {
       password,
     });
 
-    await admin.firestore().collection(USERS_RESOURCE).doc(userRecord.uid).set({});
-    await admin.firestore().collection(PERMISSION_RESOURCE).doc(userRecord.uid).set({});
+    await admin
+      .firestore()
+      .collection(USERS_RESOURCE)
+      .doc(userRecord.uid)
+      .set({});
+    await admin
+      .firestore()
+      .collection(PERMISSION_RESOURCE)
+      .doc(userRecord.uid)
+      .set({});
     await addPermission(userRecord.uid, USER_PERMISSION);
     return userRecord;
   } catch (error: any) {
-    console.error('createUser error:', error);
+    console.error("createUser error:", error);
     // Check if it's a duplicate email error
-    if (error.code === 'auth/email-already-exists') {
-      throw new Error('An account with this email already exists. Please use a different email or try logging in.');
+    if (error.code === "auth/email-already-exists") {
+      throw new Error(
+        "An account with this email already exists. Please use a different email or try logging in."
+      );
     }
     throw error; // Re-throw other errors
   }
 }
 
 export async function disableUser(uid: string, disable = true) {
-
   if (disable) {
     const timestamp = admin.firestore.FieldValue.serverTimestamp();
-    await admin.firestore()
-    .collection(USERS_RESOURCE)
-    .doc(uid)
-    .update({
+    await admin.firestore().collection(USERS_RESOURCE).doc(uid).update({
       disabled: true,
       disabledAt: timestamp,
     });
@@ -68,14 +78,17 @@ async function handlePasswordReset(email: string) {
   const resetLink = await admin.auth().generatePasswordResetLink(email);
   const resetEmail = createPasswordResetEmail(email, resetLink);
   await sendEmail(resetEmail);
-  return {message: "Password reset email sent"};
+  return { message: "Password reset email sent" };
 }
 
-function createPasswordResetEmail(email: string, resetLink: string): EmailMessage {
+function createPasswordResetEmail(
+  email: string,
+  resetLink: string
+): EmailMessage {
   return {
     to: email,
-    from: 'admin@aptero.co',
-    subject: 'Password Reset Request',
+    from: "admin@yundera.com",
+    subject: "Password Reset Request",
     text: `Hello, you requested a password reset. Click the link to reset your password: ${resetLink}`,
     html: `
       <p>Hello,</p>
@@ -102,55 +115,55 @@ async function handleUserRoute(
   }
 ) {
   switch (pathStr) {
-    case 'user/create':
+    case "user/create":
       // no auth required. anybody can create an account
-      if (!validateMethod(req, res, 'POST')) return;
-      const {email, password} = req.body;
+      if (!validateMethod(req, res, "POST")) return;
+      const { email, password } = req.body;
       const userRecord = await createUser(email, password);
       if (config?.onUserCreate) config.onUserCreate(userRecord.uid);
       return res.status(200).json(userRecord);
 
-    case 'user/config/firebase':
+    case "user/config/firebase":
       // no auth required
       return res.status(200).json(fbConfig);
 
-    case 'user/reset':
+    case "user/reset":
       // no auth required
-      if (!validateMethod(req, res, 'POST')) return;
-      const {email: resetEmail} = req.body;
+      if (!validateMethod(req, res, "POST")) return;
+      const { email: resetEmail } = req.body;
       const result = await handlePasswordReset(resetEmail);
       return res.status(200).json(result);
 
-    case 'user/permission':
-      if (!validateMethod(req, res, 'POST')) return;
+    case "user/permission":
+      if (!validateMethod(req, res, "POST")) return;
       // Using authentication
       try {
         const decodedToken = await authenticateRequest(req);
-        const {uid} = decodedToken;
+        const { uid } = decodedToken;
         const perms = await handleUserPermission(uid);
         return res.status(200).json(perms);
       } catch (error) {
-        return res.status(401).json({error: "Unauthorized"});
+        return res.status(401).json({ error: "Unauthorized" });
       }
 
-    case 'user/delete':
-      if (!validateMethod(req, res, 'POST')) return;
+    case "user/delete":
+      if (!validateMethod(req, res, "POST")) return;
       // Using authentication
       try {
         const decodedToken = await authenticateRequest(req);
-        const {uid} = decodedToken;
+        const { uid } = decodedToken;
         if (config?.onUserDelete) {
-          config.onUserDelete(uid);//we may need the user id to do some clean up so this is first thing to do
+          config.onUserDelete(uid); //we may need the user id to do some clean up so this is first thing to do
         } else {
           await disableUser(uid);
         }
         return res.status(200).json("done");
       } catch (error) {
-        return res.status(401).json({error: "Unauthorized"});
+        return res.status(401).json({ error: "Unauthorized" });
       }
 
     default:
-      return res.status(404).json({error: 'Route not found'});
+      return res.status(404).json({ error: "Route not found" });
   }
 }
 
@@ -165,17 +178,16 @@ export async function userApiHandler(
 ) {
   try {
     const path = req.query.path || [];
-    const pathStr = Array.isArray(path) ? path.join('/') : path;
+    const pathStr = Array.isArray(path) ? path.join("/") : path;
 
     // Handle different route types
-    if (pathStr.startsWith('user')) {
+    if (pathStr.startsWith("user")) {
       return await handleUserRoute(pathStr, req, res, config);
     } else {
-      return res.status(404).json({error: 'Route not found'});
+      return res.status(404).json({ error: "Route not found" });
     }
-
   } catch (error) {
     console.error(error.toString());
-    return res.status(500).json({error: error.toString()});
+    return res.status(500).json({ error: error.toString() });
   }
 }
