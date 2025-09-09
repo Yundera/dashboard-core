@@ -38,6 +38,17 @@ async function createUser(email: string, password: string) {
       .doc(userRecord.uid)
       .set({});
     await addPermission(userRecord.uid, USER_PERMISSION);
+
+    // Send registration confirmation email
+    try {
+      const confirmationEmail = createRegistrationConfirmationEmail(email, userRecord.uid);
+      await sendEmail(confirmationEmail);
+      console.log(`Registration confirmation email sent to ${email}`);
+    } catch (emailError) {
+      // Log email error but don't fail user creation
+      console.error("Failed to send registration confirmation email:", emailError);
+    }
+
     return userRecord;
   } catch (error: any) {
     console.error("createUser error:", error);
@@ -87,7 +98,7 @@ function createPasswordResetEmail(
 ): EmailMessage {
   return {
     to: email,
-    from: "admin@yundera.com",
+    from: "", // Will use SENDMAIL_FROM_EMAIL env variable
     subject: "Password Reset Request",
     text: `Hello, you requested a password reset. Click the link to reset your password: ${resetLink}`,
     html: `
@@ -97,6 +108,49 @@ function createPasswordResetEmail(
       <p>If you did not request this, please ignore this email.</p>
       <p>Thanks,</p>
       <p>Your Team at Aptero</p>
+    `,
+  };
+}
+
+function createRegistrationConfirmationEmail(
+  email: string,
+  uid: string
+): EmailMessage {
+  return {
+    to: email,
+    from: "", // Will use SENDMAIL_FROM_EMAIL env variable
+    subject: "Welcome to Yundera - Registration Confirmed",
+    text: `Welcome to Yundera! Your account has been successfully created. Account Details: Email: ${email}, Account ID: ${uid}. You can now start setting up your Personal Cloud Server and manage your data with complete privacy and control.`,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #2c3e50;">Welcome to Yundera! 🌐</h2>
+        <p>Your account has been successfully created and is ready to use.</p>
+        
+        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="color: #34495e; margin-top: 0;">Account Details:</h3>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Account ID:</strong> ${uid}</p>
+          <p><strong>Created:</strong> ${new Date().toLocaleDateString()}</p>
+        </div>
+        
+        <p>You can now start setting up your Personal Cloud Server and manage your data with complete privacy and control.</p>
+        
+        <div style="background-color: #e8f5e8; padding: 15px; border-radius: 8px; margin: 20px 0;">
+          <h4 style="color: #27ae60; margin-top: 0;">🚀 What's Next?</h4>
+          <ul style="margin: 10px 0;">
+            <li>Set up your Personal Cloud Server (PCS)</li>
+            <li>Configure your domain and security settings</li>
+            <li>Install your favorite open source applications</li>
+          </ul>
+        </div>
+        
+        <p>If you have any questions, feel free to reach out to our support team.</p>
+        
+        <p style="margin-top: 30px;">
+          Welcome aboard!<br>
+          <strong>Your Team at Yundera</strong>
+        </p>
+      </div>
     `,
   };
 }
