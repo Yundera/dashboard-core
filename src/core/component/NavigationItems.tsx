@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, IconButton, Divider, Stack, Box, Menu, MenuItem } from '@mui/material';
 import { 
-  AccountCircle as PersonIcon, 
   Language as LanguageIcon, 
   KeyboardTab, 
   Start, 
@@ -20,6 +19,7 @@ import {
 } from 'react-admin';
 import { Link } from 'react-router-dom';
 import type { PanelInterface } from "../PanelInterface";
+import { UserProfileButton } from './UserProfileButton';
 
 interface NavigationItemsProps {
   panels: PanelInterface[];
@@ -174,15 +174,7 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({
         }}>
           <Stack spacing={2}>
             {/* Profile Button */}
-            <Button
-              startIcon={<PersonIcon />}
-              variant="outlined"
-              component={Link}
-              to="/settings"
-              sx={{ borderRadius: '16px' }}
-            >
-              {translate('ra.auth.user_menu')}
-            </Button>
+            <UserProfileButton variant="mobile" />
             
             {/* Shared Navigation List (Dashboard + Panels) */}
             <Stack direction="row" spacing={1} flexWrap="wrap" justifyContent="center" sx={{ width: '100%' }}>
@@ -285,38 +277,7 @@ export const NavigationItems: React.FC<NavigationItemsProps> = ({
   return (
     <Stack spacing={0}>
       {/* Profile Button */}
-      <Button
-        component={Link}
-        to="/settings"
-        startIcon={delayedOpen ? <PersonIcon sx={{ fontSize: '2.5rem' }} /> : undefined}
-        sx={{
-          width: delayedOpen ? '100%' : '56px',
-          height: '64px !important',
-          justifyContent: delayedOpen ? 'flex-start' : 'center',
-          textTransform: 'none',
-          padding: delayedOpen ? '16px 12px' : '16px 0',
-          borderRadius: '16px',
-          fontSize: '1.2rem',
-          lineHeight: '1 !important',
-          marginBottom: '4px',
-          marginLeft: delayedOpen ? undefined : 'auto',
-          marginRight: delayedOpen ? undefined : 'auto',
-          minWidth: 'auto',
-          display: 'flex',
-          alignItems: 'center',
-          color: theme => theme.palette.info.main,
-          '&:hover': {
-            backgroundColor: theme => theme.palette.action.hover,
-          },
-          '& .MuiButton-startIcon': {
-            '& .MuiSvgIcon-root': {
-              fontSize: '2.5rem !important',
-            },
-          },
-        }}
-      >
-        {delayedOpen ? translate('ra.auth.user_menu') : <PersonIcon sx={{ fontSize: '2.5rem' }} />}
-      </Button>
+      <UserProfileButton variant="sidebar" delayedOpen={delayedOpen} />
 
       {/* Shared Navigation List (Dashboard + Panels) */}
       {navigationList.map(item => renderNavigationItem(item))}
