@@ -1,10 +1,9 @@
 import {Onboarding} from "../component/onboarding/Onboarding";
 import {SignUpStep} from "../component/onboarding/SignUpStep";
-import {TryBeforeBuyStep} from "../component/onboarding/TryBeforeBuyStep";
 import {GlobalLoadingProvider} from "../component/GlobalLoadingContext";
 import {Box, Stack, Typography, useTheme} from "@mui/material";
 import {useConfigurationContext} from "../configuration/ConfigurationContext";
-import {Children, ReactElement, useState, useEffect} from "react";
+import {Children, ReactElement} from "react";
 import {OnboardingStepProps} from "../component/onboarding/OnboardingStep";
 
 import PrimaryContainer from "../component/PrimaryContainer";
@@ -17,28 +16,6 @@ interface RegisterPageProps {
 export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  // Add children prop here
   const {logo, title} = useConfigurationContext();
   const theme = useTheme();
-  const [showTryBeforeBuy, setShowTryBeforeBuy] = useState(false); // Start with false, will be set by useEffect
-
-  // Check if user has already seen the "Try before you buy" popup
-  useEffect(() => {
-    const hasSeenTryBeforeBuy = localStorage.getItem('yundera_has_seen_try_before_buy') === 'true';
-    if (!hasSeenTryBeforeBuy) {
-      setShowTryBeforeBuy(true);
-    }
-  }, []);
-
-  const handleTryDemo = () => {
-    // Mark as seen and close popup
-    localStorage.setItem('yundera_has_seen_try_before_buy', 'true');
-    setShowTryBeforeBuy(false);
-    window.open('https://demo.nsl.sh', '_blank', 'noopener,noreferrer');
-  };
-
-  const handleBuyYundera = () => {
-    // Mark as seen and close popup
-    localStorage.setItem('yundera_has_seen_try_before_buy', 'true');
-    setShowTryBeforeBuy(false);
-  };
 
   return (
     <GlobalLoadingProvider>
@@ -172,11 +149,6 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  //
         </Box>
       </Box>
     </Stack>
-      <TryBeforeBuyStep
-        open={showTryBeforeBuy}
-        onTryDemo={handleTryDemo}
-        onBuyYundera={handleBuyYundera}
-      />
     </GlobalLoadingProvider>
   );
 };

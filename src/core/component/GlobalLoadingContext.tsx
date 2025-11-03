@@ -44,11 +44,9 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
     devMode: false,
     loadingComplete: false,
   });
-  
+
   const [showContinue, setShowContinue] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [hasInteractedWithPanel, setHasInteractedWithPanel] = useState(false);
-  const [isReadyToContinue, setIsReadyToContinue] = useState(false);
   // Persistent carousel state across loading panels
   const [carouselIndex, setCarouselIndex] = useState(0);
   const [carouselProgress, setCarouselProgress] = useState(0);
@@ -70,10 +68,7 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
     if (loadingState.isLoading) {
       return;
     }
-    
-    // Preserve interaction state during step transitions
-    const preserveInteraction = hasInteractedWithPanel;
-    
+
     setLoadingState(prev => ({
       ...prev,
       isLoading: true,
@@ -82,13 +77,6 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
     }));
     setShowContinue(false);
     setCurrentMessageIndex(0);
-    setIsReadyToContinue(false);
-    
-    // Reset interaction state only for completely new loading sessions
-    // If this is a fresh registration start, reset interaction
-    if (!preserveInteraction) {
-      setHasInteractedWithPanel(false);
-    }
 
     // In dev mode, show continue button after delay
     if (options.devMode) {
@@ -129,42 +117,25 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
       clearTimeout(cleanupTimerRef.current);
       cleanupTimerRef.current = null;
     }
-    
+
     setLoadingState(prev => ({ ...prev, isLoading: false }));
     setShowContinue(false);
-    setIsReadyToContinue(false);
   };
 
   const markLoadingComplete = () => {
     setLoadingState(prev => ({ ...prev, loadingComplete: true }));
   };
 
-  const handlePanelHoverChange = (isHovering: boolean) => {
-    if (isHovering && !hasInteractedWithPanel) {
-      setHasInteractedWithPanel(true);
-    }
-  };
-
-  const handleReadyToContinue = () => {
-    hideLoading();
-  };
-
-  // Update ready state based on loading completion AND user interaction
+  // Auto-hide when loading completes
   React.useEffect(() => {
-    const shouldShowContinue = Boolean(loadingState.loadingComplete && hasInteractedWithPanel && !loadingState.devMode);
-    setIsReadyToContinue(shouldShowContinue);
-  }, [loadingState.loadingComplete, hasInteractedWithPanel, loadingState.devMode]);
-
-  // Auto-hide if loading completes but user never interacted
-  React.useEffect(() => {
-    if (loadingState.loadingComplete && !hasInteractedWithPanel && !(loadingState.devMode ?? false)) {
+    if (loadingState.loadingComplete && !loadingState.devMode) {
       const autoHideTimer = setTimeout(() => {
         hideLoading();
-      }, 2000); // Auto-hide after 2 seconds if no interaction
-      
+      }, 1000); // Auto-hide after 1 second
+
       return () => clearTimeout(autoHideTimer);
     }
-  }, [loadingState.loadingComplete, hasInteractedWithPanel, loadingState.devMode]);
+  }, [loadingState.loadingComplete, loadingState.devMode]);
 
   const updateLoading = (options: Partial<LoadingState>) => {
     setLoadingState(prev => ({ ...prev, ...options }));
@@ -220,8 +191,6 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
             }}
           >
             <Box
-              onMouseEnter={() => handlePanelHoverChange(true)}
-              onMouseLeave={() => handlePanelHoverChange(false)}
               sx={{
                 backgroundColor: theme.palette.background.paper,
                 borderRadius: '30px',
@@ -271,38 +240,26 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
                     color: theme.palette.text.primary,
                   }}
                 >
-                  {isReadyToContinue ? 'Ready to continue!' : loadingState.title}
+                  {loadingState.title}
                 </Typography>
 
-                {/* Spinner or Continue Button - consistent space */}
+                {/* Spinner - consistent space */}
                 <Box sx={{ height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  {!loadingState.loadingComplete ? (
-                    <CircularProgress 
-                      size={60} 
+                  {!loadingState.loadingComplete && (
+                    <CircularProgress
+                      size={60}
                       thickness={3}
-                      sx={{ 
+                      sx={{
                         color: theme.palette.primary.main,
                       }}
                     />
-                  ) : isReadyToContinue ? (
-                    <Button
-                      variant="contained"
-                      onClick={handleReadyToContinue}
-                      sx={{
-                        borderRadius: '25px',
-                        px: 4,
-                        py: 1.5,
-                      }}
-                    >
-                      Continue
-                    </Button>
-                  ) : null}
+                  )}
                 </Box>
 
                 {/* App Carousel - below spinner */}
-                <AppCarousel 
+                <AppCarousel
                   onHoverStateChange={(hovering: boolean) => {}} // No longer needed, using panel hover
-                  autoSlideInterval={4000}
+                  autoSlideInterval={9000}
                   persistentIndex={carouselIndex}
                   persistentProgress={carouselProgress}
                   onStateChange={(index, progress) => {
