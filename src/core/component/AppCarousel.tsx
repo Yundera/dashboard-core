@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { Box, Card, CardContent, Typography, LinearProgress, Avatar } from '@mui/material';
+import { Box, Card, CardContent, Typography, LinearProgress, Avatar, alpha } from '@mui/material';
 import { appsConfig, AppConfig } from './appsConfig';
 
 interface AppCarouselProps {
@@ -10,9 +10,9 @@ interface AppCarouselProps {
   onStateChange?: (index: number, progress: number) => void;
 }
 
-export const AppCarousel: React.FC<AppCarouselProps> = ({ 
+export const AppCarousel: React.FC<AppCarouselProps> = ({
   onHoverStateChange,
-  autoSlideInterval = 4000,
+  autoSlideInterval = 9000,
   persistentIndex = 0,
   persistentProgress = 0,
   onStateChange
@@ -25,6 +25,14 @@ export const AppCarousel: React.FC<AppCarouselProps> = ({
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentApp = appsConfig[currentIndex];
+
+  // Preload all app icons to prevent loading delays in carousel
+  useEffect(() => {
+    appsConfig.forEach((app) => {
+      const img = new Image();
+      img.src = app.icon;
+    });
+  }, []); // Only run once on mount
 
   // Initialize from persistent state when component mounts (only once)
   useEffect(() => {
@@ -112,67 +120,105 @@ export const AppCarousel: React.FC<AppCarouselProps> = ({
       <Card
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        sx={{
+        elevation={0}
+        sx={(theme) => ({
+          position: 'relative',
+          border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+          borderRadius: '16px',
+          boxShadow: `0 2px 8px ${alpha(theme.palette.primary.main, 0.08)}`,
           mb: 2,
-          transition: 'transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out',
-          cursor: 'default', // Remove pointer cursor
+          transition: 'all 0.2s ease-in-out',
+          cursor: 'default',
+          backgroundColor: theme.palette.background.paper,
           '&:hover': {
             transform: 'translateY(-2px)',
-            boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
+            boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.15)}`,
+            borderColor: alpha(theme.palette.primary.main, 0.4),
           },
-        }}
+          [theme.breakpoints.down('sm')]: {
+            borderRadius: '12px',
+          },
+        })}
       >
-        <CardContent sx={{ display: 'flex', alignItems: 'center', p: 3 }}>
+        <CardContent
+          sx={(theme) => ({
+            display: 'flex',
+            alignItems: 'center',
+            p: 2,
+            '&:last-child': {
+              pb: 2,
+            },
+            [theme.breakpoints.down('sm')]: {
+              p: 1.5,
+            },
+          })}
+        >
           {/* App Icon - vertically centered */}
           <Avatar
             src={currentApp.icon}
             alt={currentApp.name}
-            sx={{
+            sx={(theme) => ({
               width: 48,
               height: 48,
-              mr: 3,
+              mr: 2,
               flexShrink: 0,
               alignSelf: 'center',
-            }}
+              [theme.breakpoints.down('sm')]: {
+                width: 40,
+                height: 40,
+                mr: 1.5,
+              },
+            })}
           />
-          
+
           {/* App Info */}
-          <Box sx={{ flex: 1 }}>
+          <Box sx={{ flex: 1, minWidth: 0 }}>
             {/* Title and Subtitle on same line */}
-            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 1 }}>
-              <Typography 
-                variant="h6" 
-                component="div" 
-                sx={{ 
+            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.75, mb: 0.5, flexWrap: 'wrap' }}>
+              <Typography
+                variant="subtitle1"
+                component="div"
+                sx={(theme) => ({
                   fontWeight: 600,
-                  color: 'text.primary'
-                }}
+                  color: 'text.primary',
+                  [theme.breakpoints.down('sm')]: {
+                    fontSize: '0.95rem',
+                  },
+                })}
               >
                 {currentApp.name}
               </Typography>
-              
-              <Typography 
-                variant="subtitle2" 
-                sx={{ 
+
+              <Typography
+                variant="caption"
+                sx={(theme) => ({
                   color: 'primary.main',
                   fontWeight: 500,
-                }}
+                  [theme.breakpoints.down('sm')]: {
+                    fontSize: '0.7rem',
+                  },
+                })}
               >
                 - {currentApp.subtitle}
               </Typography>
             </Box>
-            
-            <Typography 
-              variant="body2" 
-              sx={{ 
+
+            <Typography
+              variant="body2"
+              sx={(theme) => ({
                 color: 'text.secondary',
                 lineHeight: 1.4,
-                minHeight: '2.8em', // Fixed height for 2 lines
+                fontSize: '0.875rem',
+                minHeight: '2.8em',
                 overflow: 'hidden',
                 display: '-webkit-box',
                 WebkitLineClamp: 2,
                 WebkitBoxOrient: 'vertical',
-              }}
+                [theme.breakpoints.down('sm')]: {
+                  fontSize: '0.75rem',
+                  minHeight: '2.1em',
+                },
+              })}
             >
               {currentApp.description}
             </Typography>
@@ -185,35 +231,43 @@ export const AppCarousel: React.FC<AppCarouselProps> = ({
         <LinearProgress
           variant="determinate"
           value={isHovering ? progress : progress}
-          sx={{
+          sx={(theme) => ({
             height: 4,
-            borderRadius: 2,
-            backgroundColor: 'grey.200',
+            borderRadius: '4px',
+            backgroundColor: alpha(theme.palette.primary.main, 0.1),
             '& .MuiLinearProgress-bar': {
-              borderRadius: 2,
-              backgroundColor: 'primary.main',
+              borderRadius: '4px',
+              backgroundColor: theme.palette.primary.main,
               transition: isResetting ? 'none' : (isHovering ? 'none' : 'transform 0.1s linear'),
             },
-          }}
+            [theme.breakpoints.down('sm')]: {
+              height: 3,
+            },
+          })}
         />
-        
+
         {/* Dots indicator */}
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2, gap: 1 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 1.5, gap: 1 }}>
           {appsConfig.map((_, index) => (
             <Box
               key={index}
               onClick={() => handleDotClick(index)}
-              sx={{
-                width: 8,
-                height: 8,
+              sx={(theme) => ({
+                width: index === currentIndex ? 10 : 6,
+                height: index === currentIndex ? 10 : 6,
                 borderRadius: '50%',
-                backgroundColor: index === currentIndex ? 'primary.main' : 'grey.300',
-                transition: 'background-color 0.3s ease',
+                backgroundColor: index === currentIndex ? theme.palette.primary.main : alpha(theme.palette.primary.main, 0.25),
+                transition: 'all 0.2s ease',
                 cursor: 'pointer',
                 '&:hover': {
-                  backgroundColor: index === currentIndex ? 'primary.dark' : 'grey.400',
+                  backgroundColor: index === currentIndex ? theme.palette.primary.dark : alpha(theme.palette.primary.main, 0.4),
+                  transform: 'scale(1.15)',
                 },
-              }}
+                [theme.breakpoints.down('sm')]: {
+                  width: index === currentIndex ? 8 : 5,
+                  height: index === currentIndex ? 8 : 5,
+                },
+              })}
             />
           ))}
         </Box>

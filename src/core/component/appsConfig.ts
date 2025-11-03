@@ -8,45 +8,87 @@ export interface AppConfig {
 
 export const appsConfig: AppConfig[] = [
   {
-    id: "nextcloud",
-    icon: "https://raw.githubusercontent.com/nextcloud/server/master/core/img/favicon.png",
-    name: "Nextcloud",
-    subtitle: "File Storage & Collaboration",
-    description: "Secure file hosting and collaboration platform."
+    id: "immich",
+    icon: "https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Immich/icon.png",
+    name: "Immich",
+    subtitle: "Photo & Video Library",
+    description: "Your private photo library, fully under your control. Backup from mobile devices and organize by date, location, and face."
   },
   {
-    id: "plex",
-    icon: "https://www.plex.tv/wp-content/uploads/2018/01/plex-logo-dark.png",
-    name: "Plex",
-    subtitle: "Media Server",
-    description: "Stream movies, TV shows, music and photos to any device, anywhere."
-  },
-  {
-    id: "homeassistant",
-    icon: "https://www.home-assistant.io/images/favicon-192x192-full.png",
-    name: "Home Assistant",
-    subtitle: "Smart Home Hub",
-    description: "Control and automate smart home devices from one central location."
-  },
-  {
-    id: "bitwarden",
-    icon: "https://bitwarden.com/icons/icon-96x96.png",
-    name: "Bitwarden",
+    id: "vaultwarden",
+    icon: "https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Vaultwarden/icon.png",
+    name: "Vaultwarden",
     subtitle: "Password Manager",
-    description: "Secure password management and digital vault for sensitive data."
+    description: "Self-hosted password management with end-to-end encryption. Store login credentials, credit cards, and 2FA codes securely."
+  },
+  {
+    id: "nextcloud",
+    icon: "https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Nextcloud/icon.png",
+    name: "Nextcloud",
+    subtitle: "Collaboration Platform",
+    description: "Build your Teams alternative with file storage, calendar, contacts, video calling, and office suite capabilities."
+  },
+  {
+    id: "filebrowser",
+    icon: "https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/FileBrowser/icon.png",
+    name: "FileBrowser",
+    subtitle: "File Management",
+    description: "Full-featured file management in your browser. Upload, organize, preview, and share files across all your devices."
+  },
+  {
+    id: "duplicati",
+    icon: "https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Duplicati/icon.png",
+    name: "Duplicati",
+    subtitle: "Backup Solution",
+    description: "Encrypt and back up your data to the cloud safely and automatically with incremental, compressed backups."
   },
   {
     id: "jellyfin",
-    icon: "https://jellyfin.org/images/favicon.ico",
+    icon: "https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Jellyfin/icon.png",
     name: "Jellyfin",
-    subtitle: "Media System",
-    description: "Free media server for organizing and streaming your content."
+    subtitle: "Media Server",
+    description: "Your movie hub. Watch your own movies, shows, and live TV just like a streaming app, but fully hosted by you."
   },
   {
-    id: "gitea",
-    icon: "https://gitea.io/images/favicon.png",
-    name: "Gitea",
-    subtitle: "Git Repository",
-    description: "Lightweight Git service for hosting code repositories and collaboration."
+    id: "mealie",
+    icon: "https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Mealie/icon.png",
+    name: "Mealie",
+    subtitle: "Recipe Manager",
+    description: "Your family cookbook that never loses recipes. Save recipes from any website, plan meals, and generate shopping lists automatically."
+  },
+  {
+    id: "navidrome",
+    icon: "https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Navidrome/icon.png",
+    name: "Navidrome",
+    subtitle: "Music Streaming",
+    description: "Stream your personal music collection from anywhere. Compatible with Subsonic apps for iOS and Android with multi-user support."
+  },
+  {
+    id: "rocketchat",
+    icon: "https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/RocketChat/icon.png",
+    name: "RocketChat",
+    subtitle: "Team Communication",
+    description: "Complete team communication platform with secure messaging, file sharing, voice/video calls, and customizable integrations."
+  },
+  {
+    id: "seafile",
+    icon: "https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Seafile/icon.png",
+    name: "Seafile",
+    subtitle: "File Hosting & Collaboration",
+    description: "Enterprise-grade file sync and sharing with team libraries, version control, online editing, and two-factor authentication."
+  },
+  {
+    id: "suwayomi",
+    icon: "https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/Suwayomi/icon.png",
+    name: "Suwayomi",
+    subtitle: "Manga Library",
+    description: "Your personal manga library with 1200+ sources. Track reading progress, download for offline reading, and sync across devices."
+  },
+  {
+    id: "qbittorrent",
+    icon: "https://cdn.jsdelivr.net/gh/Yundera/AppStore@main/Apps/qBittorrent/icon.png",
+    name: "qBittorrent",
+    subtitle: "BitTorrent Client",
+    description: "Feature-rich BitTorrent client with sequential downloading, bandwidth scheduling, RSS feed support, and web-based interface."
   }
 ];
