@@ -35,7 +35,8 @@ const LoadingButton = ({
         globalLoading.markLoadingComplete();
       }
     }
-  }, [loading, useGlobalOverlay, globalLoading, loadingTitle, loadingSubtitle]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading, useGlobalOverlay]);
 
   if (useGlobalOverlay) {
     // Don't show loading in button when using global overlay

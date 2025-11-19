@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useMemo, useCallback } from 'react';
 import { Box, CircularProgress, Button, Alert, Typography, useTheme } from '@mui/material';
 import { AppCarousel } from './AppCarousel';
 
@@ -63,18 +63,19 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
     };
   }, []);
 
-  const showLoading = (options: Partial<LoadingState> = {}) => {
+  const showLoading = useCallback((options: Partial<LoadingState> = {}) => {
     // Prevent multiple calls when already loading
-    if (loadingState.isLoading) {
-      return;
-    }
-
-    setLoadingState(prev => ({
-      ...prev,
-      isLoading: true,
-      loadingComplete: false,
-      ...options,
-    }));
+    setLoadingState(prev => {
+      if (prev.isLoading) {
+        return prev;
+      }
+      return {
+        ...prev,
+        isLoading: true,
+        loadingComplete: false,
+        ...options,
+      };
+    });
     setShowContinue(false);
     setCurrentMessageIndex(0);
 
@@ -105,9 +106,9 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
         }
       }, 10000);
     }
-  };
+  }, []);
 
-  const hideLoading = () => {
+  const hideLoading = useCallback(() => {
     // Clear any running timers
     if (messageTimerRef.current) {
       clearInterval(messageTimerRef.current);
@@ -120,11 +121,11 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
 
     setLoadingState(prev => ({ ...prev, isLoading: false }));
     setShowContinue(false);
-  };
+  }, []);
 
-  const markLoadingComplete = () => {
+  const markLoadingComplete = useCallback(() => {
     setLoadingState(prev => ({ ...prev, loadingComplete: true }));
-  };
+  }, []);
 
   // Auto-hide when loading completes
   React.useEffect(() => {
@@ -137,21 +138,21 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
     }
   }, [loadingState.loadingComplete, loadingState.devMode]);
 
-  const updateLoading = (options: Partial<LoadingState>) => {
+  const updateLoading = useCallback((options: Partial<LoadingState>) => {
     setLoadingState(prev => ({ ...prev, ...options }));
-  };
+  }, []);
 
-  const handleDevContinue = () => {
+  const handleDevContinue = useCallback(() => {
     hideLoading();
-  };
+  }, [hideLoading]);
 
-  const value: GlobalLoadingContextType = {
+  const value: GlobalLoadingContextType = useMemo(() => ({
     showLoading,
     hideLoading,
     updateLoading,
     markLoadingComplete,
     isLoading: loadingState.isLoading,
-  };
+  }), [showLoading, hideLoading, updateLoading, markLoadingComplete, loadingState.isLoading]);
 
   return (
     <GlobalLoadingContext.Provider value={value}>
