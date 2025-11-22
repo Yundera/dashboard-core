@@ -244,6 +244,21 @@ export const GlobalLoadingProvider: React.FC<GlobalLoadingProviderProps> = ({ ch
                   {loadingState.title}
                 </Typography>
 
+                {/* Subtitle */}
+                {loadingState.subtitle && (
+                  <Typography
+                    variant="body1"
+                    sx={{
+                      color: theme.palette.text.secondary,
+                      maxWidth: '600px',
+                      px: 2,
+                      mt: -1,
+                    }}
+                  >
+                    {loadingState.subtitle}
+                  </Typography>
+                )}
+
                 {/* Spinner - consistent space */}
                 <Box sx={{ height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   {!loadingState.loadingComplete && (
