@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { admin, config as fbConfig } from "./FirebaseAdminApi";
-import { sendEmail } from "../email/Sendgrid";
+import { sendEmail, EmailAttachment } from "../email/Sendgrid";
 import {
   PERMISSION_RESOURCE,
   USER_PERMISSION,
@@ -9,6 +9,8 @@ import {
 import { addPermission, getPermissions } from "./Permission";
 import { validateMethod } from "../generic/ValidateMethod";
 import { authenticateRequest } from "./AuthenticateRequest";
+import * as fs from 'fs';
+import * as path from 'path';
 
 // Types
 type EmailMessage = {
@@ -17,7 +19,27 @@ type EmailMessage = {
   subject: string;
   text: string;
   html: string;
+  attachments?: EmailAttachment[];
 };
+
+// Helper function to get Yundera logo as base64
+function getYunderaLogoBase64(): string {
+  const logoPath = process.env.NODE_ENV === 'production'
+    ? '/app/assets/yundera-logo.svg'
+    : path.resolve(__dirname, '../assets/yundera-logo.svg');
+  return fs.readFileSync(logoPath).toString('base64');
+}
+
+// Get logo attachment for emails
+function getYunderaLogoAttachment(): EmailAttachment {
+  return {
+    filename: 'yundera-logo.svg',
+    content: getYunderaLogoBase64(),
+    type: 'image/svg+xml',
+    disposition: 'inline',
+    content_id: 'yundera_logo'
+  };
+}
 
 // User management handlers
 async function createUser(email: string, password: string) {
@@ -102,13 +124,17 @@ function createPasswordResetEmail(
     subject: "Password Reset Request",
     text: `Hello, you requested a password reset. Click the link to reset your password: ${resetLink}`,
     html: `
-      <p>Hello,</p>
-      <p>You requested a password reset. Please click the link below to reset your password:</p>
-      <a href="${resetLink}">Reset Password</a>
-      <p>If you did not request this, please ignore this email.</p>
-      <p>Thanks,</p>
-      <p>Your Team at Aptero</p>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <img src="cid:yundera_logo" alt="Yundera" style="width: 150px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;" />
+        <p>Hello,</p>
+        <p>You requested a password reset. Please click the link below to reset your password:</p>
+        <a href="${resetLink}">Reset Password</a>
+        <p>If you did not request this, please ignore this email.</p>
+        <p>Thanks,</p>
+        <p>Your Team at Aptero</p>
+      </div>
     `,
+    attachments: [getYunderaLogoAttachment()]
   };
 }
 
@@ -123,6 +149,7 @@ function createRegistrationConfirmationEmail(
     text: `Welcome to Yundera! Your account has been successfully created. Account Details: Email: ${email}, Account ID: ${uid}. You can now start setting up your Personal Cloud Server and manage your data with complete privacy and control.`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <img src="cid:yundera_logo" alt="Yundera" style="width: 150px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;" />
         <h2 style="color: #2c3e50;">Welcome to Yundera! 🌐</h2>
         <p>Your account has been successfully created and is ready to use.</p>
         
@@ -152,6 +179,7 @@ function createRegistrationConfirmationEmail(
         </p>
       </div>
     `,
+    attachments: [getYunderaLogoAttachment()]
   };
 }
 
