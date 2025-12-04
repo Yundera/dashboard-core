@@ -25,8 +25,8 @@ export function useUserIdentity() {
             (async () => {
                 try {
                     const userData = await (await getFirebaseDataProvider()).getOne(USERS_RESOURCE, { id: dataId.id });
-                    setData({ ...userData.data, id: dataId.id });
-                    dataCache = { ...userData.data, id: dataId.id };
+                    setData({ ...dataId, ...userData.data, id: dataId.id });
+                    dataCache = { ...dataId, ...userData.data, id: dataId.id };
                 } catch (error) {
                     setError(error);
                 } finally {
