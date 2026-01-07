@@ -25,17 +25,17 @@ type EmailMessage = {
 // Helper function to get Yundera logo as base64
 function getYunderaLogoBase64(): string {
   const logoPath = process.env.NODE_ENV === 'production'
-    ? '/app/assets/yundera-logo.svg'
-    : path.resolve(__dirname, '../assets/yundera-logo.svg');
+    ? '/app/assets/yundera-logo.png'
+    : path.resolve(__dirname, '../assets/yundera-logo.png');
   return fs.readFileSync(logoPath).toString('base64');
 }
 
 // Get logo attachment for emails
 function getYunderaLogoAttachment(): EmailAttachment {
   return {
-    filename: 'yundera-logo.svg',
+    filename: 'yundera-logo.png',
     content: getYunderaLogoBase64(),
-    type: 'image/svg+xml',
+    type: 'image/png',
     disposition: 'inline',
     content_id: 'yundera_logo'
   };
