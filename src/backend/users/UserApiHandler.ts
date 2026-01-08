@@ -152,42 +152,49 @@ function createRegistrationConfirmationEmail(
   email: string,
   uid: string
 ): EmailMessage {
+  const registrationUrl = "https://dashboard.yundera.com/register";
   return {
     to: email,
     from: "", // Will use SENDMAIL_FROM_EMAIL env variable
     subject: "Welcome to Yundera - Registration Confirmed",
-    text: `Welcome to Yundera! Your account has been successfully created. Account Details: Email: ${email}, Account ID: ${uid}. You can now start setting up your Personal Cloud Server and manage your data with complete privacy and control.`,
+    text: `Welcome to Yundera! Your account has been successfully created. Account Details: Email: ${email}, Account ID: ${uid}. Continue your registration at: ${registrationUrl}`,
     html: `
-      <div style="font-family: 'Trebuchet MS', sans-serif; max-width: 600px; margin: 0 auto; color:#3d617f;">
-        <img src="cid:yundera_logo" alt="Yundera" style="width: 150px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;" />
-        <h2 style="font-family: 'Comfortaa','Trebuchet MS', sans-serif; color: #27aae1;">Welcome to Yundera! 🌐</h2>
-        <p>Your account has been successfully created and is ready to use.</p>
+<div style="font-family: 'Trebuchet MS', sans-serif; max-width: 600px; margin: 0 auto; color:#3d617f;">
+  <img src="cid:yundera_logo" alt="Yundera" style="width: 150px; height: auto; margin-bottom: 20px; display: block; margin-left: auto; margin-right: auto;" />
+  <h2 style="font-family: 'Comfortaa','Trebuchet MS', sans-serif; color: #27aae1;">Welcome to Yundera! 🌐</h2>
+  <p>Your account has been successfully created and is ready to use.</p>
 
-        <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-          <h3 style="color: #34495e; margin-top: 0;">Account Details:</h3>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Account ID:</strong> ${uid}</p>
-          <p><strong>Created:</strong> ${new Date().toLocaleDateString()}</p>
-        </div>
+  <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+    <h3 style="color: #34495e; margin-top: 0;">Account Details:</h3>
+    <p><strong>Email:</strong> ${email}</p>
+    <p><strong>Account ID:</strong> ${uid}</p>
+    <p><strong>Created:</strong> ${new Date().toLocaleDateString()}</p>
+  </div>
 
-        <p>You can now start setting up your Personal Cloud Server and manage your data with complete privacy and control.</p>
+  <div style="text-align: center; margin: 30px 0;">
+    <a href="${registrationUrl}" style="display: inline-block; padding: 15px 30px; background-color: #27aae1; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">Continue Registration</a>
+  </div>
 
-        <div style="background-color: #dcebf9; padding: 15px; border-radius: 8px; margin: 20px 0;">
-          <h4 style="color: #27aae1; margin-top: 0;">🚀 What's Next?</h4>
-          <ul style="margin: 10px 0;">
-            <li>Set up your Personal Cloud Server (PCS)</li>
-            <li>Configure your domain and security settings</li>
-            <li>Install your favorite open source applications</li>
-          </ul>
-        </div>
+  <div style="background-color: #dcebf9; padding: 15px; border-radius: 8px; margin: 20px 0;">
+    <h4 style="color: #27aae1; margin-top: 0;">🚀 What's Next?</h4>
+    <ul style="margin: 10px 0;">
+      <li>Purchase your personal cloud server (PCS)</li>
+      <li>Choose a name for your cloud</li>
+      <li>Install your favorite open source applications</li>
+    </ul>
+  </div>
 
-        <p>If you have any questions, feel free to reach out to our support team.</p>
+  <p style="font-size: 0.9em; color: #666;">
+    <strong>Registration URL:</strong> <a href="${registrationUrl}" style="color: #27aae1;">${registrationUrl}</a>
+  </p>
 
-        <p style="margin-top: 30px;">
-          Welcome aboard!<br>
-          <strong>Your Team at Yundera</strong>
-        </p>
-      </div>
+  <p>If you have any questions, feel free to reach out to our support team.</p>
+
+  <p style="margin-top: 30px;">
+    Welcome aboard!<br>
+    <strong>Your Team at Yundera</strong>
+  </p>
+</div>
     `,
     attachments: [getYunderaLogoAttachment()]
   };
