@@ -27,6 +27,7 @@ interface AppProps {
   themeList: Theme[];
   panels: PanelInterface[];
   i18n?:Record<string,TranslationMessages>;
+  layout?: (panels: PanelInterface[]) => React.ComponentType<any>;
 }
 
 // Define props interface for AppWrapper component
@@ -41,7 +42,8 @@ const App = ({
                dataProvider,
                themeList,
                panels,
-               i18n
+               i18n,
+               layout
              }: AppProps) => {
   if(!themeList || themeList.length === 0) {
     throw new Error('No theme defined');
@@ -66,7 +68,7 @@ const App = ({
       authProvider={authProvider}
       dashboard={dashboard}
       loginPage={Login}
-      layout={Layout(panels)}
+      layout={layout ? layout(panels) : Layout(panels)}
       i18nProvider={i18nProvider(panels,i18n)}
       disableTelemetry
       lightTheme={lightTheme}
@@ -96,6 +98,7 @@ export const AppWrapper = ({
                       dataProvider,
                       themeList,
                       panels,
+                      layout,
                     }: AppWrapperProps) => (
   <StoreContextProvider value={store}>
     <GlobalLoadingProvider>
@@ -105,6 +108,7 @@ export const AppWrapper = ({
         dashboard={dashboard}
         panels={panels}
         themeList={themeList}
+        layout={layout}
       >
         {children}
       </App>
