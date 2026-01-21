@@ -1,20 +1,25 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import {BaseConfig, getConfig} from "./LocalBackendConfig";
 
+export interface CoreApiHandlerOptions {
+  defaultPublicEnv?: string[];
+}
+
 // Configuration handlers
-function getPublicConfig(): Record<string, any> {
+function getPublicConfig(defaultPublicEnv: string[] = []): Record<string, any> {
   const publicConfig: Record<string, any> = {};
-  for (const key of getConfig<BaseConfig,string[]>("FRONTEND_PUBLIC_ENV") || []) {
+  const envKeys = getConfig<BaseConfig,string[]>("FRONTEND_PUBLIC_ENV") || defaultPublicEnv;
+  for (const key of envKeys) {
     publicConfig[key] = getConfig<any,any>(key);
   }
   return publicConfig;
 }
 
 // Route handlers
-async function handleConfigRoute(pathStr: string, res: NextApiResponse) {
+async function handleConfigRoute(pathStr: string, res: NextApiResponse, options: CoreApiHandlerOptions) {
   switch (pathStr) {
     case 'config/core':
-      return res.status(200).json(getPublicConfig());
+      return res.status(200).json(getPublicConfig(options.defaultPublicEnv));
     default:
       return res.status(404).json({ error: 'Route not found' });
   }
@@ -23,7 +28,8 @@ async function handleConfigRoute(pathStr: string, res: NextApiResponse) {
 // Main API handler
 export async function coreApiHandler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
+  options: CoreApiHandlerOptions = {}
 ) {
   try {
     const path = req.query.path || [];
@@ -31,7 +37,7 @@ export async function coreApiHandler(
 
     // Handle different route types
     if(pathStr.startsWith('config')) {
-      return await handleConfigRoute(pathStr, res);
+      return await handleConfigRoute(pathStr, res, options);
     }else {
       // No matching route found
       return res.status(404).json({error: 'Route not found'});
