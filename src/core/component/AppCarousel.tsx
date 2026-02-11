@@ -20,6 +20,7 @@ export const AppCarousel: React.FC<AppCarouselProps> = ({
   const [currentIndex, setCurrentIndex] = useState(persistentIndex);
   const [progress, setProgress] = useState(persistentProgress);
   const [isHovering, setIsHovering] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [isResetting, setIsResetting] = useState(false);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -47,7 +48,7 @@ export const AppCarousel: React.FC<AppCarouselProps> = ({
 
   // Handle auto-slide logic
   useEffect(() => {
-    if (!isHovering) {
+    if (!isHovering && !isPaused) {
       // Capture current progress at the moment this effect runs
       const currentProgress = progress;
       let startTime = Date.now() - (currentProgress / 100 * autoSlideInterval);
@@ -92,7 +93,7 @@ export const AppCarousel: React.FC<AppCarouselProps> = ({
       if (intervalRef.current) clearTimeout(intervalRef.current);
       if (progressIntervalRef.current) clearInterval(progressIntervalRef.current);
     };
-  }, [currentIndex, isHovering, autoSlideInterval]); // Removed progress from deps
+  }, [currentIndex, isHovering, isPaused, autoSlideInterval]); // Removed progress from deps
 
   const handleMouseEnter = () => {
     setIsHovering(true);
@@ -105,6 +106,7 @@ export const AppCarousel: React.FC<AppCarouselProps> = ({
   };
 
   const handleDotClick = (index: number) => {
+    setIsPaused(true);
     setIsResetting(true);
     setCurrentIndex(index);
     // Reset progress immediately with no animation for manual clicks
