@@ -152,7 +152,7 @@ function createRegistrationConfirmationEmail(
   email: string,
   uid: string
 ): EmailMessage {
-  const registrationUrl = "https://dashboard.yundera.com/register";
+  const registrationUrl = "https://app.yundera.com/dashboard#register";
   return {
     to: email,
     from: "", // Will use SENDMAIL_FROM_EMAIL env variable
