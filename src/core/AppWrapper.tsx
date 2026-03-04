@@ -17,6 +17,7 @@ import type {PanelInterface} from "./PanelInterface";
 import {CustomRoutes} from "ra-core";
 import type {ExtendedAuthProviderInterface} from "../interface/ExtendedAuthProviderInterface";
 import {GlobalLoadingProvider} from "./component/GlobalLoadingContext";
+import {ErrorReportingProvider} from "./component/ErrorReportingContext";
 
 // Define props interface for App component
 interface AppProps {
@@ -31,7 +32,12 @@ interface AppProps {
 }
 
 // Define props interface for AppWrapper component
-interface AppWrapperProps extends AppProps {}
+interface AppWrapperProps extends AppProps {
+  errorReporter?: {
+    captureException: (error: any, options?: { tags?: Record<string, string> }) => void;
+    setUser: (user: { email?: string } | null) => void;
+  };
+}
 
 const store = localStorageStore(undefined, appConfigContext.defaultTitle);
 
@@ -99,8 +105,10 @@ export const AppWrapper = ({
                       themeList,
                       panels,
                       layout,
+                      errorReporter,
                     }: AppWrapperProps) => (
   <StoreContextProvider value={store}>
+    <ErrorReportingProvider reporter={errorReporter}>
     <GlobalLoadingProvider>
       <App
         authProvider={authProvider}
@@ -113,5 +121,6 @@ export const AppWrapper = ({
         {children}
       </App>
     </GlobalLoadingProvider>
+    </ErrorReportingProvider>
   </StoreContextProvider>
 );

@@ -8,6 +8,7 @@ import { useGlobalLoading } from '../GlobalLoadingContext';
 import React, {useEffect, useState, useRef} from 'react';
 import {notifyError} from "../NotifyError";
 import {Visibility, VisibilityOff} from '@mui/icons-material';
+import {useErrorReporting} from "../ErrorReportingContext";
 
 interface UserInput {
   email: string;
@@ -29,6 +30,7 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
   const authProvider = useAuthProvider();
   const notify = useNotify();
   const globalLoading = useGlobalLoading();
+  const errorReporting = useErrorReporting();
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -41,9 +43,11 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
     try {
       await authProvider.registerUser(data.email, data.password);
       await authProvider.login({ username: data.email, password: data.password });
+      errorReporting.setUser({ email: data.email });
       onNext?.();
     } catch (error) {
       console.error("Account creation error:", error);
+      errorReporting.captureException(error, { tags: { service: "pcs-dashboard", flow: "onboarding", step: "signup" } });
       notifyError(error, 'Sign-up failed', notify);
       setHasError(true); // Mark that an error occurred
       setLoading(false); // This triggers LoadingButton to mark loading complete

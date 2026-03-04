@@ -8,6 +8,7 @@ export * from "./core/PanelInterface";
 export * from "./core/UsersResource";
 export * from "./core/types";
 export * from "./core/component/AppCarousel";
+export * from "./core/component/ErrorReportingContext";
 export * from "./core/component/GlobalLoadingContext";
 export * from "./core/component/GradientButton";
 export * from "./core/component/GradientCard";
