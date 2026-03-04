@@ -27,7 +27,7 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
     mode: 'onChange',
     defaultValues: { termsAccepted: false }
   });
-  const authProvider = useAuthProvider();
+  const authProvider = useAuthProvider({ skipAuthCheck: true });
   const notify = useNotify();
   const globalLoading = useGlobalLoading();
   const errorReporting = useErrorReporting();

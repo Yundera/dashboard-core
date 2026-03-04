@@ -6,10 +6,12 @@ interface LoadingInterface {
   loading: boolean;
 }
 
-export const useAuthProvider = (): (ExtendedAuthProviderInterface & LoadingInterface) => {
+export const useAuthProvider = (options?: { skipAuthCheck?: boolean }): (ExtendedAuthProviderInterface & LoadingInterface) => {
   const ap = rauseAuthProvider() as unknown as ExtendedAuthProviderInterface;
-  const [loading, setLoading] = useState(true);
+  const skipAuthCheck = options?.skipAuthCheck ?? false;
+  const [loading, setLoading] = useState(!skipAuthCheck);
   useEffect(() => {
+    if (skipAuthCheck) return;
     (async () => {
       try {
         await ap.checkAuth({});
