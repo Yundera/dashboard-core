@@ -1,7 +1,7 @@
 import {useState} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 
-import {Avatar, Box, Button, Card, CardActions, CircularProgress,} from '@mui/material';
+import {Avatar, Box, Button, Card, CardActions, CircularProgress, Typography,} from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import {Form, required, TextInput, useLogin, useNotify, useTranslate,} from 'react-admin';
 import {RegisterPagePath} from "./RegisterPage";
@@ -52,6 +52,7 @@ export const Login = () => {
         <Form onSubmit={handleSubmit} noValidate>
             <Box
                 sx={{
+                    position: 'relative',
                     display: 'flex',
                     flexDirection: 'column',
                     minHeight: '100vh',
@@ -164,6 +165,20 @@ export const Login = () => {
                       filter: 'drop-shadow(-1px 1px 2px rgba(0,0,0,0.3))',
                   }}
               />
+              <Typography
+                variant="caption"
+                sx={{
+                  position: 'absolute',
+                  bottom: 4,
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  color: 'text.secondary',
+                  fontSize: '0.65rem',
+                  zIndex: 1,
+                }}
+              >
+                v{process.env.NEXT_PUBLIC_APP_VERSION || '?'}
+              </Typography>
             </Box>
         </Form>
     );
