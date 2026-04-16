@@ -152,7 +152,7 @@ export const Login = () => {
 
               <Box
                   component="img"
-                  src={`${getConfig("BASE_PATH")}/yunderaLogo.svg`}
+                  src={`${getConfig("BASE_PATH")}/logo.svg`}
                   alt="Logo"
                   sx={{
                       position: 'absolute',

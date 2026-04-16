@@ -5,7 +5,7 @@ import {useNotify} from 'react-admin';
 import {useAuthProvider} from '../useAuthProvider';
 import LoadingButton from '../LoadingButton';
 import { useGlobalLoading } from '../GlobalLoadingContext';
-import React, {useEffect, useState, useRef} from 'react';
+import {useEffect, useState} from 'react';
 import {notifyError} from "../NotifyError";
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 import {useErrorReporting} from "../ErrorReportingContext";
@@ -35,7 +35,6 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const prevGlobalLoadingRef = useRef(false);
 
   const handleNext = async (data: UserInput) => {
     setLoading(true);
@@ -44,6 +43,8 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
       await authProvider.registerUser(data.email, data.password);
       await authProvider.login({ username: data.email, password: data.password });
       errorReporting.setUser({ email: data.email });
+      setLoading(false);
+      globalLoading.hideLoading();
       onNext?.();
     } catch (error) {
       console.error("Account creation error:", error);
@@ -71,22 +72,6 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
       }
     })();
   }, []);
-
-  // Handle continue click from global loading context
-  React.useEffect(() => {
-    // Only proceed if loading transitioned from true to false (user clicked Continue)
-    const wasGlobalLoading = prevGlobalLoadingRef.current;
-    const isCurrentlyLoading = globalLoading.isLoading;
-    
-    // Update ref for next render
-    prevGlobalLoadingRef.current = isCurrentlyLoading;
-    
-    // Detect transition: was loading -> now not loading (user clicked Continue)
-    // BUT: Do NOT proceed if there was an error - only proceed on successful completion
-    if (wasGlobalLoading && !isCurrentlyLoading && !loading && !initialLoading && !hasError) {
-      onNext();
-    }
-  }, [globalLoading.isLoading, loading, initialLoading, hasError]);
 
   if(initialLoading) {
     return <Box

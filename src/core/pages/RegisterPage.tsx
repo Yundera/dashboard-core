@@ -88,7 +88,7 @@ export const RegisterPage: React.FC<RegisterPageProps> = ({ children }) => {  //
       >
         <Box
           component="img"
-          src={`${getConfig("BASE_PATH")}/yunderaLogo.svg`}
+          src={`${getConfig("BASE_PATH")}/logo.svg`}
           alt="Logo"
           sx={{
             width: 120,
