@@ -6,6 +6,7 @@ export * from "./core/AppLoader";
 export * from "./core/AppWrapper";
 export * from "./core/PanelInterface";
 export * from "./core/UsersResource";
+export * from "./core/definePanel";
 export * from "./core/types";
 export * from "./core/component/AppCarousel";
 export * from "./core/component/ErrorReportingContext";

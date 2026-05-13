@@ -16,6 +16,12 @@ export const useAuthProvider = (options?: { skipAuthCheck?: boolean }): (Extende
       try {
         await ap.checkAuth({});
       } catch (e) {
+        // checkAuth implementations are expected to redirect the browser on
+        // failure (e.g. settings-center-app's LocalAuthProvider bounces to
+        // /login). Logging here is fine; we deliberately do not swallow the
+        // failure into a successful "loaded" state — the navigation is
+        // already underway, and any consumer that renders despite this
+        // would otherwise paint stale UI behind the redirect.
         console.error(e);
       } finally {
         setLoading(false);
