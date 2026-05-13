@@ -16,6 +16,7 @@ export * from "./core/component/GradientCard";
 export * from "./core/component/I18nProvider";
 export * from "./core/component/LoadinIndicator";
 export * from "./core/component/LoadingButton";
+export * from "./core/component/NavButton";
 export * from "./core/component/NavigationItems";
 export * from "./core/component/NotifyError";
 export * from "./core/component/PrimaryContainer";
