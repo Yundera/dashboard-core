@@ -28,7 +28,6 @@ const LoadingButton = ({
         globalLoading.showLoading({
           title: loadingTitle,
           subtitle: loadingSubtitle,
-          devMode: false,
         });
       } else {
         // Mark loading as complete instead of auto-hiding
