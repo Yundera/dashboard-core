@@ -9,6 +9,7 @@ import {useEffect, useState} from 'react';
 import {notifyError} from "../NotifyError";
 import {Visibility, VisibilityOff} from '@mui/icons-material';
 import {useErrorReporting} from "../ErrorReportingContext";
+import {appConfigContext} from "../../configuration/AppConfiguationContext";
 
 interface UserInput {
   email: string;
@@ -31,6 +32,8 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
   const notify = useNotify();
   const globalLoading = useGlobalLoading();
   const errorReporting = useErrorReporting();
+  const signUpDescription = appConfigContext.defaultSignUpDescription;
+  const signUpDisclaimer = appConfigContext.defaultSignUpDisclaimer;
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -87,6 +90,17 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
   return (
     <Stack spacing={2}>
       <Typography variant="h5">Create your account</Typography>
+      {signUpDescription && (
+        <Box
+          sx={{
+            color: 'text.secondary',
+            fontSize: '0.875rem',
+            lineHeight: 1.5,
+          }}
+        >
+          {signUpDescription}
+        </Box>
+      )}
       <form onSubmit={handleSubmit(handleNext)}>
         <TextField
           {...register('email', {required: true})}
@@ -150,7 +164,7 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
             useGlobalOverlay={true}
             loadingTitle="Creating your account..."
             loadingSubtitle="Setting up your secure authentication and preparing your dashboard."
-            sx={{ 
+            sx={{
               backgroundColor: 'primary.main',
               color: 'white',
               '&:hover': {
@@ -164,6 +178,21 @@ export const SignUpStep = ({ onNext = (() => {}) }: SignUpStepProps) => {
           </LoadingButton>
         </Stack>
       </form>
+      {signUpDisclaimer && (
+        <Box
+          sx={{
+            mt: 1,
+            p: 1.5,
+            borderRadius: 2,
+            backgroundColor: 'action.hover',
+            color: 'text.secondary',
+            fontSize: '0.8125rem',
+            lineHeight: 1.5,
+          }}
+        >
+          {signUpDisclaimer}
+        </Box>
+      )}
     </Stack>
   );
 };
