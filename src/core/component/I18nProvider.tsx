@@ -20,12 +20,16 @@ export const i18nProvider = (
         en: { ...customEnglishMessages, resources: {} }
       };
 
-      // Add custom translations
+      // Merge custom translations (keep base ra-language translations)
       for (const customLocale of Object.keys(custom)) {
+        if (!i18n[customLocale]) {
+          i18n[customLocale] = { resources: {} } as unknown as TranslationMessages;
+        }
         i18n[customLocale] = {
+          ...i18n[customLocale],
           ...custom[customLocale],
-          resources: {}
-        };
+          resources: (i18n[customLocale] as any).resources || {}
+        } as TranslationMessages;
       }
 
       // Add panel translations
@@ -42,5 +46,9 @@ export const i18nProvider = (
     }
 
     return i18n[locale] || i18n['en']; // Fallback to English if locale not found
-  }, 'en', 'fr');
+  }, 'en', [
+    { locale: 'en', name: 'English' },
+    { locale: 'fr', name: 'Français' },
+    { locale: 'ko', name: '한국어' }
+  ]);
 };

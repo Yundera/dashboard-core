@@ -104,6 +104,7 @@ export const AppWrapper = ({
                       dataProvider,
                       themeList,
                       panels,
+                      i18n,
                       layout,
                       errorReporter,
                     }: AppWrapperProps) => (
@@ -116,6 +117,7 @@ export const AppWrapper = ({
         dashboard={dashboard}
         panels={panels}
         themeList={themeList}
+        i18n={i18n}
         layout={layout}
       >
         {children}
