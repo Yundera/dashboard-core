@@ -24,6 +24,12 @@ export type BaseConfig = {
 
   // Frontend public env configuration
   FRONTEND_PUBLIC_ENV: string[];
+
+  // Branding (all optional — fall back to Yundera defaults in Brand.ts).
+  // Lets a single dashboard-core build serve multiple tenants (Yundera, NSL, ...).
+  BRAND_NAME: string;          // e.g. "Yundera", "NSL"
+  BRAND_DASHBOARD_URL: string; // e.g. "https://dashboard.yundera.com"
+  BRAND_LOGO_URL: string;      // hosted logo; if unset, bundled logo is inlined
 }
 
 /**

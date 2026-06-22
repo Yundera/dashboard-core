@@ -10,6 +10,7 @@ import {
 import { addPermission, getPermissions } from "./Permission";
 import { validateMethod } from "../generic/ValidateMethod";
 import { authenticateRequest } from "./AuthenticateRequest";
+import { getBrandName, getBrandDashboardUrl } from "../branding/Brand";
 
 // Types
 type EmailMessage = {
@@ -127,9 +128,10 @@ function createRegistrationConfirmationEmail(
   email: string,
   uid: string
 ): EmailMessage {
-  const registrationUrl = "https://app.yundera.com/dashboard#register";
+  const brandName = getBrandName();
+  const registrationUrl = `${getBrandDashboardUrl()}#register`;
   const { html, attachments } = renderEmail({
-    heading: 'Welcome to Yundera! 🌐',
+    heading: `Welcome to ${brandName}! 🌐`,
     closing: 'Welcome aboard!',
     bodyHtml: `
   <p>Your account has been successfully created.</p>
@@ -160,8 +162,8 @@ function createRegistrationConfirmationEmail(
   return {
     to: email,
     from: "", // Will use SENDMAIL_FROM_EMAIL env variable
-    subject: "Welcome to Yundera - Registration Confirmed",
-    text: `Welcome to Yundera! Your account has been successfully created. Account Details: Email: ${email}, Account ID: ${uid}. Registration URL: ${registrationUrl}`,
+    subject: `Welcome to ${brandName} - Registration Confirmed`,
+    text: `Welcome to ${brandName}! Your account has been successfully created. Account Details: Email: ${email}, Account ID: ${uid}. Registration URL: ${registrationUrl}`,
     html,
     attachments,
   };
