@@ -1,4 +1,4 @@
-import { EmailAttachment } from './Sendgrid';
+import type { EmailAttachment } from './Sendgrid';
 import { getBrandName, getBrandLogo } from '../branding/Brand';
 
 // Shared visual constants for transactional emails. These are theme colors/fonts,

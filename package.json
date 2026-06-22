@@ -13,7 +13,7 @@
     "start": "npm run dev",
     "dev": "barrelsby --directory ./src --exclude \"node_modules\" --exclude \"src/backend\" --exclude \"test.ts\"  --delete --name \"index.ts\" --watch",
     "barrels": "barrelsby --directory ./src --exclude \"node_modules\" --exclude \"src/backend\" --exclude \"test.ts\"  --delete --name \"index.ts\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run"
   },
   "devDependencies": {
     "@mui/icons-material": "^6.1.5",
@@ -44,6 +44,7 @@
     "react-router": "^6.27.0",
     "react-router-dom": "^6.27.0",
     "tsup": "^8.3.5",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
   }
 }

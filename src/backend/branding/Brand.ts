@@ -1,5 +1,5 @@
 import { getConfig } from "../config/LocalBackendConfig";
-import { EmailAttachment } from "../email/Sendgrid";
+import type { EmailAttachment } from "../email/Sendgrid";
 
 // Whitelabel branding for transactional emails (and anywhere else the brand
 // surfaces). dashboard-core is shared across tenants, so brand strings/assets
