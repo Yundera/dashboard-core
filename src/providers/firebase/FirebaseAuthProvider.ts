@@ -28,6 +28,31 @@ function buildApiUrl(endpoint: string): string {
   return `${basePath.endsWith("/") ? basePath : basePath + "/"}${endpoint}`;
 }
 
+/**
+ * RP-initiated logout endpoint of the Yundera OIDC provider, or null when this
+ * deployment has no IdP behind the dashboard.
+ *
+ * Why this exists: signing out of Firebase is NOT signing out of Yundera. The
+ * IdP embedded in the orchestrator keeps its own 30-day `_session` cookie on
+ * this origin, and an incoming `/authorize` is answered from that cookie BEFORE
+ * the interaction page — the only thing that ever reads the Firebase session.
+ * So clearing Firebase alone leaves every PCS able to log the user straight back
+ * in without a prompt. Ending the IdP session is what actually signs them out.
+ *
+ * Derived rather than configured, because the derivation cannot drift: the
+ * provider is mounted at `${VNAS_BACKEND}/auth` by the orchestrator itself
+ * (EnvConfig `OIDC_ISSUER` defaults to `${TEMPLATE_API}/auth`), and
+ * `VNAS_BACKEND` is already published to the frontend. `SSO_LOGOUT_URL`
+ * overrides it if the IdP is ever moved off that origin.
+ */
+function ssoLogoutUrl(): string | null {
+  const explicit = getConfig("SSO_LOGOUT_URL");
+  if (explicit) return explicit;
+  const backend = getConfig("VNAS_BACKEND");
+  if (!backend) return null;
+  return `${backend.replace(/\/+$/, "")}/auth/session/end`;
+}
+
 class FirebaseAuthProvider implements ExtendedAuthProviderInterface {
   app: FirebaseApp;
 
@@ -225,7 +250,30 @@ class FirebaseAuthProvider implements ExtendedAuthProviderInterface {
   async logout(): Promise<void> {
     await this.getApp();
     const auth = getAuth();
+
+    // Order matters. Firebase first: the IdP's interaction page reads the
+    // persisted Firebase user to sign people in silently, so an IdP session
+    // ended while Firebase still holds a user would be re-minted by the very
+    // next /authorize. Clearing Firebase first closes that window.
     await auth.signOut();
+
+    const sso = ssoLogoutUrl();
+    if (!sso) return;
+
+    // A top-level navigation, not a fetch. The IdP's `_session` cookie is
+    // SameSite=Lax, so it rides a top-level GET but NOT a subresource request —
+    // an XHR/fetch here would arrive without the cookie and end nothing. The
+    // provider recognises a same-origin navigation and submits its confirmation
+    // form automatically (see rpInitiatedLogout.logoutSource in the
+    // orchestrator), then redirects back to the dashboard.
+    //
+    // `replace` rather than `assign` so Back does not land on a dead app shell
+    // that believes it is still signed in.
+    window.location.replace(sso);
+
+    // Never resolves: the navigation above is already in flight, and letting
+    // react-admin continue would race it with its own redirect to /login.
+    return new Promise<never>(() => {});
   }
 }
 
